@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benjamin Nkusi - Educator, Writer, Public Servant</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e74c3c;
+            --accent-color: #3498db;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .navbar {
+            background-color: var(--primary-color) !important;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: white !important;
+            font-size: 1.5rem;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+            color: white;
+            padding: 120px 0 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("{% static '/images/Nkusi-Family.webp' %}") no-repeat center center/cover;
+            opacity: 0.2;
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            max-width: 600px;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            padding: 12px 30px;
+            font-weight: 600;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-primary:hover {
+            background-color: #c0392b;
+            border-color: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-outline-light {
+            padding: 12px 30px;
+            font-weight: 600;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-outline-light:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 50px;
+            position: relative;
+            display: inline-block;
+            color: var(--primary-color);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--secondary-color);
+            border-radius: 2px;
+        }
+        
+        .section-padding {
+            padding: 100px 0;
+        }
+        
+        .bg-light-gray {
+            background-color: #f8f9fa;
+        }
+        
+        .about-img {
+            border-radius: 10px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .about-img:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .project-card {
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            background-color: white;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .project-img {
+            height: 220px;
+            object-fit: cover;
+            width: 100%;
+        }
+        
+        .project-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .project-category {
+            display: inline-block;
+            padding: 3px 10px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        
+        .testimonial-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+            background-color: white;
+        }
+        
+        .testimonial-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: -40px;
+        }
+        
+        .contact-form {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-control {
+            height: 50px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            box-shadow: none;
+            border-color: var(--accent-color);
+        }
+        
+        textarea.form-control {
+            height: auto;
+            min-height: 150px;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 99;
+        }
+        
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .section-padding {
+                padding: 60px 0;
+            }
+            
+            .hero-section {
+                padding: 100px 0 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Benjamin Nkusi</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#projects">Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#blog">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <a class="btn btn-sm btn-primary" href="#donate">Donate</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7 hero-content">
+                    <h1 class="hero-title">Transforming Lives Through Education and Community Service</h1>
+                    <p class="hero-subtitle">Benjamin Nkusi is a Rwandan educator, writer, and public servant dedicated to improving lives through education, literature, and community development initiatives.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="#projects" class="btn btn-primary">View Projects</a>
+                        <a href="#contact" class="btn btn-outline-light">Contact Me</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Projects -->
+    <section id="projects" class="section-padding">
+        <div class="container">
+            <h2 class="section-title text-center">Featured Projects</h2>
+            <div class="row">
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card project-card h-100">
+                        <img src="{% static 'images/Water-Filtration.png' %}" class="project-img" alt="Water Filtration">
+                        <div class="card-body">
+                            <span class="project-category">Community</span>
+                            <h5 class="project-title">Clean Water Initiative</h5>
+                            <p class="card-text">Implemented clean water solutions for rural communities, providing access to safe drinking water for over 5,000 people.</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <a href="#" class="btn btn-sm btn-outline-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card project-card h-100">
+                        <img src="{% static 'images/Nkusi_About.webp' %}" class="project-img" alt="Food for Children">
+                        <div class="card-body">
+                            <span class="project-category">Nutrition</span>
+                            <h5 class="project-title">School Feeding Program</h5>
+                            <p class="card-text">Provides daily nutritious meals to 1,200 students in underprivileged schools, improving attendance and performance.</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <a href="#" class="btn btn-sm btn-outline-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card project-card h-100">
+                        <img src="{% static 'images/Nkusi_Laundry.webp' %}" class="project-img" alt="Farming">
+                        <div class="card-body">
+                            <span class="project-category">Agriculture</span>
+                            <h5 class="project-title">Sustainable Farming</h5>
+                            <p class="card-text">Training local farmers in modern, sustainable techniques that have increased yields by 40% while preserving the environment.</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <a href="#" class="btn btn-sm btn-outline-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card project-card h-100">
+                        <img src="{% static 'images/Nkusi_Potato-Farm.webp' %}" class="project-img" alt="Community Building">
+                        <div class="card-body">
+                            <span class="project-category">Education</span>
+                            <h5 class="project-title">Literacy Program</h5>
+                            <p class="card-text">Established community libraries and adult literacy classes benefiting over 3,000 individuals across 15 villages.</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <a href="#" class="btn btn-sm btn-outline-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <a href="#" class="btn btn-primary">View All Projects</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section-padding bg-light-gray">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-5 mb-5 mb-lg-0">
+                    <img src="{% static 'images/Nkusi_Benjamin1.webp' %}" alt="Benjamin Nkusi" class="img-fluid about-img">
+                </div>
+                <div class="col-lg-7">
+                    <h2 class="section-title">About Benjamin</h2>
+                    <p>Benjamin Nkusi is a remarkable Rwandan educator, writer, and public servant who has dedicated his life to empowering communities through education, literature, and sustainable development initiatives.</p>
+                    
+                    <p>As an educator with over 20 years of experience, Benjamin has taught at various schools and universities, inspiring countless students with his passion for learning and commitment to excellence. His innovative teaching methods have been recognized nationally, earning him the Rwandan Excellence in Education Award in 2018.</p>
+                    
+                    <p>As a writer, Benjamin has authored seven acclaimed books and numerous articles that explore themes of reconciliation, community development, and Rwandan heritage. His memoir "From the Ashes of History" has become required reading in several African studies programs.</p>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="d-flex mb-3">
+                                <div class="me-3 text-primary">
+                                    <i class="fas fa-book-open fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h5>Published Works</h5>
+                                    <p class="mb-0">7 books, 30+ articles</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex mb-3">
+                                <div class="me-3 text-primary">
+                                    <i class="fas fa-users fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h5>Community Impact</h5>
+                                    <p class="mb-0">15,000+ lives touched</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="btn btn-primary mt-3">Read Full Biography</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section-padding">
+        <div class="container">
+            <h2 class="section-title text-center">What People Say</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card testimonial-card h-100">
+                        <div class="card-body text-center p-4">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" class="testimonial-img mb-3" alt="Testimonial">
+                            <p class="card-text mb-4">"Benjamin's water project transformed our village. For the first time, our children don't have to walk miles to fetch clean water. His dedication to community development is truly inspiring."</p>
+                            <h5 class="card-title mb-1">Marie Uwase</h5>
+                            <p class="text-muted small">Village Leader, Nyaruguru District</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card testimonial-card h-100">
+                        <div class="card-body text-center p-4">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="testimonial-img mb-3" alt="Testimonial">
+                            <p class="card-text mb-4">"As Benjamin's student at the University of Rwanda, I witnessed firsthand his ability to make complex topics accessible. He doesn't just teach - he transforms minds."</p>
+                            <h5 class="card-title mb-1">Eric Mugisha</h5>
+                            <p class="text-muted small">Former Student, Now Lecturer</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card testimonial-card h-100">
+                        <div class="card-body text-center p-4">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" class="testimonial-img mb-3" alt="Testimonial">
+                            <p class="card-text mb-4">"Benjamin's writings on post-genocide reconciliation helped me heal and understand my country's history. His words have the power to unite and inspire hope."</p>
+                            <h5 class="card-title mb-1">Grace Ingabire</h5>
+                            <p class="text-muted small">Reader & Community Activist</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest Blog Posts -->
+    <section id="blog" class="section-padding bg-light-gray">
+        <div class="container">
+            <h2 class="section-title text-center">Latest Writings</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="card-img-top" alt="Blog Post">
+                        <div class="card-body">
+                            <span class="badge bg-primary mb-2">Education</span>
+                            <h5 class="card-title">Reimagining Rural Education in Rwanda</h5>
+                            <p class="card-text">Exploring innovative approaches to bring quality education to Rwanda's most remote communities and the challenges we must overcome.</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
+                            <small class="text-muted">June 15, 2023</small>
+                            <a href="#" class="btn btn-sm btn-outline-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="card-img-top" alt="Blog Post">
+                        <div class="card-body">
+                            <span class="badge bg-success mb-2">Community</span>
+                            <h5 class="card-title">The Power of Collective Memory in Healing</h5>
+                            <p class="card-text">How community storytelling projects are helping Rwandans process trauma and build a shared vision for the future.</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
+                            <small class="text-muted">May 28, 2023</small>
+                            <a href="#" class="btn btn-sm btn-outline-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="card-img-top" alt="Blog Post">
+                        <div class="card-body">
+                            <span class="badge bg-warning mb-2">Literature</span>
+                            <h5 class="card-title">Preserving Kinyarwanda Through Modern Literature</h5>
+                            <p class="card-text">The role of contemporary Rwandan writers in keeping our native language vibrant and relevant for younger generations.</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
+                            <small class="text-muted">April 10, 2023</small>
+                            <a href="#" class="btn btn-sm btn-outline-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <a href="#" class="btn btn-outline-primary">View All Articles</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Donation CTA -->
+    <section id="donate" class="py-5 bg-primary text-white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mb-4 mb-lg-0">
+                    <h3 class="mb-3">Support Benjamin's Community Initiatives</h3>
+                    <p class="mb-0">Your donation helps fund education programs, clean water projects, and sustainable agriculture initiatives in rural Rwanda.</p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <a href="#" class="btn btn-light btn-lg">Donate Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section-padding">
+        <div class="container">
+            <h2 class="section-title text-center">Get In Touch</h2>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="contact-form">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="name" placeholder="Your Name" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" placeholder="Your Email" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="subject" class="form-label">Subject</label>
+                                <input type="text" class="form-control" id="subject" placeholder="Subject">
+                            </div>
+                            <div class="mb-3">
+                                <label for="message" class="form-label">Message</label>
+                                <textarea class="form-control" id="message" rows="5" placeholder="Your Message" required></textarea>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary px-5">Send Message</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <h5 class="text-white mb-4">Benjamin Nkusi</h5>
+                    <p>Educator, writer, and public servant dedicated to improving lives through education, literature, and community development in Rwanda.</p>
+                    <div class="social-icons mt-4">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-5 mb-md-0">
+                    <h5 class="text-white mb-4">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#projects">Projects</a></li>
+                        <li><a href="#blog">Blog</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-5 mb-md-0">
+                    <h5 class="text-white mb-4">Projects</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Education Initiatives</a></li>
+                        <li><a href="#">Water Filtration</a></li>
+                        <li><a href="#">Sustainable Farming</a></li>
+                        <li><a href="#">Community Libraries</a></li>
+                        <li><a href="#">Reconciliation Programs</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Contact Info</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-3"><i class="fas fa-map-marker-alt me-2"></i> Kigali, Rwanda</li>
+                        <li class="mb-3"><i class="fas fa-envelope me-2"></i> contact@benjaminnkusi.rw</li>
+                        <li class="mb-3"><i class="fas fa-phone me-2"></i> +250 788 123 456</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="mt-5 mb-4" style="border-color: rgba(255,255,255,0.1);">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-0">&copy; 2023 Benjamin Nkusi. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="mb-0">Designed with <i class="fas fa-heart text-danger"></i> for Rwanda</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top -->
+    <a href="#" class="back-to-top"><i class="fas fa-arrow-up"></i></a>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Back to top button
+        window.addEventListener('scroll', function() {
+            var backToTop = document.querySelector('.back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('active');
+            } else {
+                backToTop.classList.remove('active');
+            }
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
