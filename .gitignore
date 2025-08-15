@@ -1,0 +1,20 @@
+
+# Virtual Environments
+venv/
+env/
+ENV/
+.venv/
+.env/
+
+
+
+# Environment Variables
+.env
+.env.*
+
+
+
+
+
+
+
