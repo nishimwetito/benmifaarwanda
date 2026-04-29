@@ -38,16 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
-    'accounts',
+    'users',
     'crispy_forms',
     'crispy_bootstrap5',
 ]
 
-# Custom user model
-AUTH_USER_MODEL = 'accounts.User'
 
 # Crispy Forms settings
-CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap'
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -64,7 +62,7 @@ ROOT_URLCONF = 'benmifaarwanda.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
