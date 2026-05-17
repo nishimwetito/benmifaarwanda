@@ -2,21 +2,60 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %}Register page {% endblock %}
+{% block title %}Register | BE2SAHOBE{% endblock %}
 
 {% block content %}
 
-<h2>Register</h2>
+<!-- Register Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title" id="registerModalLabel" style="font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--deep-green);">
+          Create Account
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body px-4 pb-4">
+        <p class="small mb-4" style="color: #6B7A6E;">
+          Join BE2SAHOBE and start your holistic family journey today.
+        </p>
+        
+        <form method="POST">
+          {% csrf_token %}
+          
+          <!-- Crispy form rendering -->
+          {{ form|crispy }}
+          
+          <button type="submit" class="btn btn-primary-custom w-100 py-2 mt-3">
+            <i class="bi bi-person-plus me-2"></i>Create Account
+          </button>
+        </form>
+        
+        <p class="text-center small mt-3 mb-0" style="color: #6B7A6E;">
+          Already have an account? 
+          <a href="{% url 'login' %}" style="color: var(--primary-green); text-decoration: none; font-weight: 600;">
+            Sign in
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 
-<form method="POST">
-   {% csrf_token %}
-   {{ form.as_p}}
-
-   <button type="submit">Register</button>
-</form>
-
-<p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
-
-
+<!-- Auto-show modal on page load if there are errors -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const formErrors = document.querySelectorAll('.errorlist, .alert-danger');
+    if (formErrors.length > 0) {
+      const modal = new bootstrap.Modal(document.getElementById('registerModal'));
+      modal.show();
+    } else {
+      // Auto-show modal on register page (optional - remove if you want manual trigger)
+      const modal = new bootstrap.Modal(document.getElementById('registerModal'));
+      modal.show();
+    }
+  });
+</script>
 
 {% endblock %}

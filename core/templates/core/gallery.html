@@ -1,0 +1,254 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Gallery | BE2SAHOBE LTD {% endblock %}
+
+{% block content %}
+<!-- ═══════════════════════════════════════════════
+     GALLERY HERO
+═══════════════════════════════════════════════ -->
+<section id="gallery-hero" style="background: linear-gradient(135deg, var(--green-dark), var(--green-main)); padding: 100px 0 60px; color: white; position: relative; overflow: hidden;">
+    <div class="container text-center">
+        <span class="section-label" style="background: rgba(255,255,255,0.1); color: var(--gold); border: 1px solid rgba(255,255,255,0.1);">Our Visual Journey</span>
+        <h1 class="display-4 fw-bold mb-3" style="font-family: 'Cormorant Garamond', serif;">Impact in <span style="color: var(--gold);">Pictures</span></h1>
+        <div class="divider-line mx-auto" style="background: var(--gold);"></div>
+        <p class="mx-auto" style="max-width: 600px; color: rgba(255,255,255,0.8);">
+            Capturing the moments of transformation, family growth, and holistic living across the families we serve.
+        </p>
+    </div>
+    <!-- Subtle background pattern -->
+    <div style="position: absolute; bottom: -20px; right: -20px; font-size: 15rem; color: rgba(255,255,255,0.03); transform: rotate(-15deg);">
+        <i class="bi bi-flower2"></i>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     GALLERY GRID
+═══════════════════════════════════════════════ -->
+<section id="gallery-page" class="py-6" style="padding: 80px 0;">
+    <div class="container">
+        <!-- Admin Actions -->
+        {% if user.is_staff %}
+        <div class="d-flex justify-content-end mb-4">
+            <button class="btn btn-gold shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#uploadImageModal">
+                <i class="bi bi-plus-lg"></i> Add New Image
+            </button>
+        </div>
+
+        <!-- Upload Modal -->
+        <div class="modal fade" id="uploadImageModal" tabindex="-1" aria-labelledby="uploadImageModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
+                    <div class="modal-header" style="background: var(--green-dark); color: white;">
+                        <h5 class="modal-title" id="uploadImageModalLabel">Upload Gallery Image</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="modal-body p-4">
+                            {% csrf_token %}
+                            {{ gallery_form.as_p }}
+                        </div>
+                        <div class="modal-footer bg-light">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-green px-4">Upload Image</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Categories Filter (Visual only for now) -->
+        <div class="d-flex flex-wrap justify-content-center gap-2 mb-5">
+            <a href="{% url 'gallery' %}" class="btn {% if not active_category %}btn-green shadow-sm{% else %}btn-outline-green{% endif %}">All Moments</a>
+            <a href="{% url 'gallery' %}?category=Impact" class="btn {% if active_category == 'Impact' %}btn-green shadow-sm{% else %}btn-outline-green{% endif %}">Impact</a>
+            <a href="{% url 'gallery' %}?category=Training" class="btn {% if active_category == 'Training' %}btn-green shadow-sm{% else %}btn-outline-green{% endif %}">Training</a>
+            <a href="{% url 'gallery' %}?category=Farming" class="btn {% if active_category == 'Farming' %}btn-green shadow-sm{% else %}btn-outline-green{% endif %}">Farming</a>
+            <a href="{% url 'gallery' %}?category=Wellness" class="btn {% if active_category == 'Wellness' %}btn-green shadow-sm{% else %}btn-outline-green{% endif %}">Wellness</a>
+        </div>
+
+        <div class="row g-4">
+            {% for item in gallery_items %}
+            <!-- Item: {{ item.title }} -->
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-tile shadow-sm">
+                    <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                    
+                    {% if user.is_staff %}
+                    <div class="admin-controls">
+                        <a href="{% url 'edit_gallery' item.pk %}" title="Edit">
+                            <i class="bi bi-pencil-square text-dark"></i>
+                        </a>
+                        <a href="{% url 'delete_gallery' item.pk %}" title="Delete">
+                            <i class="bi bi-trash text-danger"></i>
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    <div class="gallery-overlay">
+                        <div class="gallery-info text-white">
+                            <h5 class="text-white">{{ item.title }}</h5>
+                            <p>{{ item.description }}</p>
+                            
+                            <div class="d-flex align-items-center justify-content-between mt-2">
+                                <span class="badge bg-gold text-dark">{{ item.get_category_display }}</span>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-outline-light rounded-circle" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#detailModal{{ item.pk }}" 
+                                            title="View Details">
+                                        <i class="bi bi-zoom-in"></i>
+                                    </button>
+                                    <a href="{{ item.image.url }}" 
+                                       download="{{ item.title }}" 
+                                       class="btn btn-sm btn-gold rounded-circle" 
+                                       title="Download Image">
+                                        <i class="bi bi-download"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detail Modal -->
+            <div class="modal fade" id="detailModal{{ item.pk }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content overflow-hidden" style="border-radius: 20px; border: none;">
+                        <div class="row g-0">
+                            <div class="col-md-7">
+                                <img src="{{ item.image.url }}" alt="{{ item.title }}" class="img-fluid h-100" style="object-fit: cover; min-height: 400px;">
+                            </div>
+                            <div class="col-md-5 d-flex flex-column">
+                                <div class="modal-header border-0 pb-0">
+                                    <h4 class="modal-title fw-bold" style="font-family: 'Cormorant Garamond', serif;">{{ item.title }}</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <span class="badge bg-gold text-dark mb-3">{{ item.get_category_display }}</span>
+                                    <h6 class="text-uppercase small fw-bold text-muted mb-2">Description</h6>
+                                    <p class="text-secondary mb-4">{{ item.description }}</p>
+                                    
+                                    <div class="mt-auto">
+                                        <hr>
+                                        <p class="small text-muted mb-3"><i class="bi bi-calendar3 me-2"></i>Uploaded on {{ item.created_at|date:"M d, Y" }}</p>
+                                        <div class="d-grid gap-2">
+                                            <a href="{{ item.image.url }}" download="{{ item.title }}" class="btn btn-green">
+                                                <i class="bi bi-download me-2"></i> Download Full Image
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <p class="text-muted">No images in the gallery yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% include "core/includes/pagination.html" with items=gallery_items %}
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     GALLERY OVERLAY STYLES
+═══════════════════════════════════════════════ -->
+<style>
+    .gallery-tile {
+        position: relative;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        border-radius: 15px;
+        overflow: hidden;
+        height: 300px; /* Fixed height for consistency */
+        background: #f8f9fa;
+    }
+    
+    .gallery-tile img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: all 0.6s ease;
+    }
+    
+    .gallery-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        transition: all 0.4s ease;
+        padding: 20px;
+        z-index: 2;
+    }
+    
+    .gallery-tile:hover .gallery-overlay {
+        background: linear-gradient(to top, rgba(27, 58, 40, 0.95) 0%, rgba(27, 58, 40, 0.6) 60%, transparent 100%);
+    }
+    
+    .gallery-tile:hover img {
+        transform: scale(1.1);
+    }
+
+    .admin-controls {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        z-index: 10;
+        display: flex;
+        gap: 8px;
+        opacity: 0; /* Hide by default */
+        transition: all 0.3s ease;
+    }
+
+    .gallery-tile:hover .admin-controls {
+        opacity: 1; /* Show on hover */
+    }
+
+    .admin-controls a {
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border-radius: 50%;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .admin-controls a:hover {
+        transform: translateY(-3px);
+        background: var(--gold);
+    }
+    
+    .gallery-info h5 {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.35rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .gallery-info p {
+        font-size: 0.95rem;
+        line-height: 1.4;
+        margin-bottom: 10px;
+        color: #fff !important;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+{% endblock %}

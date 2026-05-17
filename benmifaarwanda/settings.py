@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
-    'users',
+    'users.apps.UsersConfig',
     'crispy_forms',
     'crispy_bootstrap5',
 ]
@@ -69,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'users.context_processors.register_form',
             ],
         },
     },
@@ -128,6 +129,17 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
+# Login/Logout redirects
+# settings.py
+
+# Login/Logout redirects - MODAL VERSION
+LOGIN_URL = 'login'  # Name of your login view (not a page URL)
+LOGIN_REDIRECT_URL = 'profile'  # Where to go after login
+LOGOUT_REDIRECT_URL = '/'  # Where to go after logout
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

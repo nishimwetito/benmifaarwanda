@@ -6,35 +6,69 @@
       BE2SAHOBE <span>LTD</span>
     </a>
 
-    <button class="navbar-toggler border-0" type="button"
-            data-bs-toggle="collapse" data-bs-target="#navMenu">
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navMenu">
       <ul class="navbar-nav ms-auto align-items-center gap-1 mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link" href="#pillars">About</a></li>
-        <li class="nav-item"><a class="nav-link" href="#courses">Courses</a></li>
-        <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
-        <li class="nav-item"><a class="nav-link" href="#savings">Savings</a></li>
-        <li class="nav-item"><a class="nav-link" href="#marketplace">Shop</a></li>
-        <li class="nav-item"><a class="nav-link" href="#community">Community</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="coursesDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Learning Materials
+          </a>
+          <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="coursesDropdown"
+            style="border-radius: 12px; padding: 10px;">
+            <li><a class="dropdown-item rounded-2 mb-1" href="{% url 'courses' %}"><i
+                  class="bi bi-grid me-2 text-success"></i>All Resources</a></li>
+            <li><a class="dropdown-item rounded-2 mb-1" href="{% url 'video_list' %}"><i
+                  class="bi bi-youtube me-2 text-danger"></i>Videos</a></li>
+            <li><a class="dropdown-item rounded-2 mb-1" href="{% url 'pdf_list' %}"><i
+                  class="bi bi-file-earmark-pdf me-2 text-danger"></i>PDF Guides</a></li>
+            <li><a class="dropdown-item rounded-2" href="{% url 'slides_list' %}"><i
+                  class="bi bi-projector me-2 text-primary"></i>Slides</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'professional_support' %}">Services/Support</a></li>
+        <!-- <li class="nav-item"><a class="nav-link" href="{% url 'partners' %}">Partners</a></li> -->
+        <li class="nav-item"><a class="nav-link" href="{% url 'gallery' %}">Gallery</a></li>
+
+        {% if user.is_authenticated %}
         <li class="nav-item ms-2">
-          <a href="{% url 'register' %}" class="btn-green" >
-             {% comment %} <a href="{% url 'register' %}" class="btn-green" data-bs-toggle="modal" data-bs-target="#joinModal"> {% endcomment %}
-            Join Free
+          <a class="nav-link" href="{% url 'dashboard' %}" style="font-weight: 500;">
+            <i class="bi bi-speedometer2 me-1"></i> Dashboard
           </a>
         </li>
+
+        <li class="nav-item ms-3">
+          <a href="{% url 'logout' %}" class="btn-green">
+            Logout
+          </a>
+        </li>
+
+
+        {% else %}
+
+        <!-- SHOW JOIN -->
         <li class="nav-item ms-2">
-          <a href="{% url 'login' %}" class="btn-green" >
-              {% comment %} <a href="{% url 'login' %}" class="btn-green" data-bs-toggle="modal" data-bs-target="#joinModal"> {% endcomment %}
+          <a href="#" class="btn-green" data-bs-toggle="modal" data-bs-target="#joinModal">
+            Register
+          </a>
+        </li>
+
+        <!-- SHOW LOGIN -->
+        <li class="nav-item ms-2">
+          <a href="#" class="btn-green" data-bs-toggle="modal" data-bs-target="#loginModal">
             Login
           </a>
         </li>
-        <li class="nav-item ms-2">
-          {% comment %} <a href="{% url 'login' %}" class="btn-green" data-bs-toggle="modal" data-bs-target="#joinModal"> {% endcomment %}
-             <a href="{% url 'logout' %}" class="btn-green" >
-            Logout
+
+        {% endif %}
+
+        <li class="nav-item ms-lg-3 my-2 my-lg-0">
+          <a href="#" class="btn-outline-earth" data-bs-toggle="modal" data-bs-target="#donationModal">
+            <i class="bi bi-heart-fill me-1"></i> Support Us
           </a>
         </li>
       </ul>

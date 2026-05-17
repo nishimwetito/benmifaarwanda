@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}All Members | BE2SAHOBE Network{% endblock %}
+
+{% block content %}
+
+<!-- ═══════════════════════════════════════════════
+     PAGE HEADER
+═══════════════════════════════════════════════ -->
+<section style="padding: 48px 0 24px 0;">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <span class="section-label">Our Members</span>
+        <h1 class="section-title mb-2">All Members</h1>
+        <div class="divider-line"></div>
+        <p class="mb-0">Connect with other families on their holistic living journey.</p>
+      </div>
+      <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <div class="course-badge" style="background: var(--green-light); font-size: 0.9rem;">
+          <i class="bi bi-people-fill me-1"></i> Total Members: {{ total_members }}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SEARCH & FILTER
+═══════════════════════════════════════════════ -->
+<section style="padding: 0 0 24px 0;">
+  <div class="container">
+    <div class="course-card" style="padding: 24px;">
+      <form method="GET" action="{% url 'all_profiles' %}">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-5">
+            <label class="form-label">Search by Name or Username</label>
+            <input type="text" 
+                   name="search" 
+                   class="form-control" 
+                   placeholder="Search members..."
+                   value="{{ search_query }}">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Filter by Gender</label>
+            <select name="gender" class="form-select">
+              <option value="">All Genders</option>
+              <option value="male" {% if gender_filter == 'male' %}selected{% endif %}>Male</option>
+              <option value="female" {% if gender_filter == 'female' %}selected{% endif %}>Female</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <button type="submit" class="btn-green w-100">
+              <i class="bi bi-search me-2"></i>Search
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     PROFILES GRID
+═══════════════════════════════════════════════ -->
+<section style="padding: 24px 0 80px 0;">
+  <div class="container">
+    
+    {% if profiles %}
+      <div class="row g-4">
+        {% for profile in profiles %}
+          <div class="col-md-6 col-lg-4">
+            <div class="course-card" style="padding: 24px; height: 100%; display: flex; flex-direction: column;">
+              
+              <!-- Profile Image -->
+              <div class="text-center mb-3">
+                {% if profile.profile_picture and profile.profile_picture.name != 'default.jpg' %}
+                  <img src="{{ profile.profile_picture.url }}" 
+                       alt="{{ profile.user.username }}"
+                       style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--earth);">
+                {% else %}
+                  <div style="width: 100px; height: 100px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; margin: 0 auto; border: 3px solid var(--earth);">
+                    <i class="bi bi-person" style="font-size: 2.5rem; color: var(--green-main);"></i>
+                  </div>
+                {% endif %}
+              </div>
+              
+              <!-- Profile Name -->
+              <h4 style="font-size: 1.2rem; text-align: center; margin-bottom: 4px;">
+                {{ profile.user.get_full_name|default:profile.user.username }}
+              </h4>
+              <p style="color: var(--text-light); font-size: 0.8rem; text-align: center; margin-bottom: 16px;">
+                @{{ profile.user.username }}
+              </p>
+              
+              <!-- Profile Details -->
+              <div style="flex-grow: 1;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 0.85rem;">
+                  <i class="bi bi-envelope" style="color: var(--green-main); width: 20px;"></i>
+                  <span>{{ profile.user.email|default:"No email" }}</span>
+                </div>
+                
+                {% if profile.phone_number %}
+                  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 0.85rem;">
+                    <i class="bi bi-telephone" style="color: var(--green-main); width: 20px;"></i>
+                    <span>{{ profile.phone_number }}</span>
+                  </div>
+                {% endif %}
+                
+                {% if profile.address %}
+                  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 0.85rem;">
+                    <i class="bi bi-geo-alt" style="color: var(--green-main); width: 20px;"></i>
+                    <span>{{ profile.address|truncatechars:30 }}</span>
+                  </div>
+                {% endif %}
+                
+                {% if profile.gender %}
+                  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 0.85rem;">
+                    <i class="bi bi-gender-ambiguous" style="color: var(--green-main); width: 20px;"></i>
+                    <span>{{ profile.get_gender_display }}</span>
+                  </div>
+                {% endif %}
+                
+                <div style="display: flex; align-items: center; gap: 10px; font-size: 0.85rem;">
+                  <i class="bi bi-calendar" style="color: var(--green-main); width: 20px;"></i>
+                  <span>Joined {{ profile.created_at|date:"M Y" }}</span>
+                </div>
+              </div>
+              
+              <!-- View Profile Button -->
+              <div style="margin-top: 20px;">
+                <a href="{% url 'profile_detail' profile.user.username %}" class="btn-outline-green d-block text-center" style="padding: 8px;">
+                  <i class="bi bi-eye me-2"></i>View Profile
+                </a>
+              </div>
+              
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      
+      <!-- ═══════════════════════════════════════════════
+           PAGINATION
+      ═══════════════════════════════════════════════ -->
+      {% if profiles.has_other_pages %}
+        <div style="display: flex; justify-content: center; gap: 8px; margin-top: 48px; flex-wrap: wrap;">
+          
+          {% if profiles.has_previous %}
+            <a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if gender_filter %}&gender={{ gender_filter }}{% endif %}" 
+               class="btn-outline-green" style="padding: 8px 16px;">
+              <i class="bi bi-chevron-double-left"></i>
+            </a>
+            <a href="?page={{ profiles.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if gender_filter %}&gender={{ gender_filter }}{% endif %}" 
+               class="btn-outline-green" style="padding: 8px 16px;">
+              <i class="bi bi-chevron-left"></i>
+            </a>
+          {% endif %}
+          
+          {% for num in profiles.paginator.page_range %}
+            {% if profiles.number == num %}
+              <span class="btn-green" style="padding: 8px 16px; cursor: default;">{{ num }}</span>
+            {% elif num > profiles.number|add:'-3' and num < profiles.number|add:'3' %}
+              <a href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if gender_filter %}&gender={{ gender_filter }}{% endif %}" 
+                 class="btn-outline-green" style="padding: 8px 16px;">
+                {{ num }}
+              </a>
+            {% endif %}
+          {% endfor %}
+          
+          {% if profiles.has_next %}
+            <a href="?page={{ profiles.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if gender_filter %}&gender={{ gender_filter }}{% endif %}" 
+               class="btn-outline-green" style="padding: 8px 16px;">
+              <i class="bi bi-chevron-right"></i>
+            </a>
+            <a href="?page={{ profiles.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if gender_filter %}&gender={{ gender_filter }}{% endif %}" 
+               class="btn-outline-green" style="padding: 8px 16px;">
+              <i class="bi bi-chevron-double-right"></i>
+            </a>
+          {% endif %}
+          
+        </div>
+      {% endif %}
+      
+    {% else %}
+      <!-- No Results -->
+      <div class="course-card" style="padding: 60px 40px; text-align: center;">
+        <i class="bi bi-people" style="font-size: 4rem; color: var(--text-light);"></i>
+        <h3 style="margin-top: 20px; margin-bottom: 10px;">No members found</h3>
+        <p style="color: var(--text-light);">Try adjusting your search or filter criteria.</p>
+        <a href="{% url 'all_profiles' %}" class="btn-green mt-3">
+          <i class="bi bi-arrow-repeat me-2"></i>Clear Filters
+        </a>
+      </div>
+    {% endif %}
+    
+  </div>
+</section>
+
+{% endblock %}

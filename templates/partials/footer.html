@@ -9,7 +9,8 @@
           BE2SAHOBE <span>LTD</span>
         </div>
         <p class="small mb-4" style="max-width:300px;">
-          A digital ecosystem for holistic family living — integrating education, support, economic empowerment, and community across Africa.
+          A digital ecosystem for holistic family living — integrating education, support, economic empowerment, and
+          community across Africa.
         </p>
         <div class="d-flex gap-2">
           <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
@@ -19,25 +20,26 @@
         </div>
       </div>
 
+      <!-- Company -->
+      <div class="col-6 col-md-4 col-lg-2">
+        <h5>Company</h5>
+        <ul class="list-unstyled" style="display:flex; flex-direction:column; gap:10px;">
+          <li><a href="{% url 'about' %}">About Us</a></li>
+
+          <li><a href="{% url 'gallery' %}">Gallery</a></li>
+          <li><a href="{% url 'professional_support' %}">Services</a></li>
+
+        </ul>
+      </div>
+
       <!-- Learn -->
       <div class="col-6 col-md-4 col-lg-2">
         <h5>Learn</h5>
         <ul class="list-unstyled" style="display:flex; flex-direction:column; gap:10px;">
-          <li><a href="#courses">Courses</a></li>
-          <li><a href="#">Articles</a></li>
-          <li><a href="#">Videos</a></li>
-          <li><a href="#">Resources</a></li>
-        </ul>
-      </div>
-
-      <!-- Support -->
-      <div class="col-6 col-md-4 col-lg-2">
-        <h5>Support</h5>
-        <ul class="list-unstyled" style="display:flex; flex-direction:column; gap:10px;">
-          <li><a href="#services">Counseling</a></li>
-          <li><a href="#services">Consulting</a></li>
-          <li><a href="#services">Training</a></li>
-          <li><a href="#savings">Savings</a></li>
+          <li><a href="{% url 'courses' %}">All Resources</a></li>
+          <li><a href="{% url 'video_list' %}">Videos</a></li>
+          <li><a href="{% url 'pdf_list' %}">PDF Guides</a></li>
+          <li><a href="{% url 'slides_list' %}">Slides</a></li>
         </ul>
       </div>
 
@@ -49,9 +51,7 @@
           <li><i class="bi bi-telephone me-2" style="color:var(--gold);"></i>+250 788 487 127</li>
           <li><i class="bi bi-envelope me-2" style="color:var(--gold);"></i>hello@be2sahobe.com</li>
         </ul>
-        <p class="small mt-3" style="color:rgba(255,255,255,0.4);">
-          MIFAA Partner — Ministry for Family Awareness in Africa
-        </p>
+
       </div>
 
     </div>

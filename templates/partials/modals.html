@@ -1,0 +1,198 @@
+<!-- Booking Modal -->
+<div class="modal fade" id="bookingModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title">Book a Session</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body px-4 pb-4">
+        <form method="POST" action="{% url 'create_booking' %}">
+          {% csrf_token %}
+          
+          <div class="mb-3">
+            <label class="form-label">Select Service <span class="text-danger">*</span></label>
+            <select name="service" class="form-select" required>
+              <option value="">-- Select Service --</option>
+              <option value="counseling">Family Counseling</option>
+              <option value="consulting">Business Consulting</option>
+              <option value="training">Group Training</option>
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label">Preferred Date <span class="text-danger">*</span></label>
+            <input type="date" name="preferred_date" class="form-control" required>
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label">Preferred Time <small class="text-muted">(Optional)</small></label>
+            <input type="time" name="preferred_time" class="form-control">
+          </div>
+          
+          <div class="mb-4">
+            <label class="form-label">Message <small class="text-muted">(Optional)</small></label>
+            <textarea name="message" class="form-control" rows="3" placeholder="Any specific questions or concerns..."></textarea>
+          </div>
+          
+          <button type="submit" class="btn-green w-100">
+            Submit Booking
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REGISTER MODAL -->
+<div class="modal fade" id="joinModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title" style="font-size:1.4rem;">Create Account</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body px-4 pb-4">
+        <p class="small mb-4" style="color:var(--text-light);">
+          Join BE2SAHOBE and start your journey today.
+        </p>
+        {% if register_form.errors %}
+          <div class="alert alert-danger">
+            Please correct the errors below.
+          </div>
+        {% endif %}
+        <form method="POST" action="{% url 'register' %}">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            {{ register_form.username }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            {{ register_form.email }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            {{ register_form.password1 }}
+          </div>
+          <div class="mb-4">
+            <label class="form-label">Confirm Password</label>
+            {{ register_form.password2 }}
+          </div>
+          <button type="submit" class="btn-green w-100">
+            Create Account
+          </button>
+        </form>
+        <p class="text-center small mt-3">
+          Already have an account?
+          <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
+            Login
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal fade" id="loginModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title" style="font-size:1.4rem;">Login</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body px-4 pb-4">
+        <p class="small mb-4" style="color:var(--text-light);">
+          Welcome back! Login to continue your journey.
+        </p>
+        <form method="POST" action="{% url 'login' %}">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input type="text" name="username" class="form-control" placeholder="Enter your username">
+          </div>
+          <div class="mb-4">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" placeholder="Enter your password">
+          </div>
+          <button type="submit" class="btn-green w-100">
+            Login
+          </button>
+        </form>
+        <p class="text-center small mt-3" style="color:var(--text-light);">
+          No account?
+          <a href="#" data-bs-toggle="modal" data-bs-target="#joinModal" style="color:var(--green-main); text-decoration:none;">
+            Register
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DONATION MODAL -->
+<div class="modal fade" id="donationModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 24px;">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold" style="color: var(--green-dark); font-size: 1.5rem;">Support Our Mission</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <p class="text-mid mb-4">Your contribution empowers families and builds stronger communities through holistic transformation. Thank you for your generosity.</p>
+          
+          <!-- Mobile Money -->
+          <div class="donation-card mb-3 p-3" style="background: #f8f9fa; border-radius: 16px; border: 1px solid rgba(0,0,0,0.05);">
+            <div class="d-flex align-items-center gap-3 mb-2">
+                <div style="width: 40px; height: 40px; background: #FFD200; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                    <i class="bi bi-phone-fill text-dark"></i>
+                </div>
+                <h6 class="mb-0 fw-bold">Mobile Money (MTN/Airtel)</h6>
+            </div>
+            <div class="ps-5">
+                <div class="d-flex justify-content-between mb-1">
+                    <span class="text-muted small">Merchant Code:</span>
+                    <span class="fw-bold">123456</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted small">Phone Number:</span>
+                    <span class="fw-bold">+250 788 123 456</span>
+                </div>
+                <div class="text-end mt-1">
+                    <small class="text-success fw-bold">Name: BE2SAHOBE LTD</small>
+                </div>
+            </div>
+          </div>
+
+          <!-- Bank Account -->
+          <div class="donation-card p-3" style="background: #f8f9fa; border-radius: 16px; border: 1px solid rgba(0,0,0,0.05);">
+            <div class="d-flex align-items-center gap-3 mb-2">
+                <div style="width: 40px; height: 40px; background: var(--green-main); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                    <i class="bi bi-bank2 text-white"></i>
+                </div>
+                <h6 class="mb-0 fw-bold">Bank Transfer</h6>
+            </div>
+            <div class="ps-5">
+                <div class="mb-2">
+                    <span class="text-muted small d-block">Bank Name:</span>
+                    <span class="fw-bold">Equity Bank Rwanda</span>
+                </div>
+                <div class="mb-2">
+                    <span class="text-muted small d-block">Account Name:</span>
+                    <span class="fw-bold">BE2SAHOBE LIMITED</span>
+                </div>
+                <div>
+                    <span class="text-muted small d-block">Account Number:</span>
+                    <span class="fw-bold" style="letter-spacing: 1px; font-size: 1.1rem;">4000 1234 5678 9</span>
+                </div>
+            </div>
+          </div>
+
+          <div class="text-center mt-4 pt-2">
+             <p class="small text-muted mb-0"><i class="bi bi-shield-check me-1"></i> Secure Payment Verification</p>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

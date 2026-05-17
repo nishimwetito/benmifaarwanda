@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Edit PDF Guide | BE2SAHOBE LTD {% endblock %}
+
+{% block content %}
+<section class="py-6" style="padding: 100px 0;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-lg border-0" style="border-radius: 20px; overflow: hidden;">
+                    <div class="card-header bg-green-dark text-white p-4">
+                        <h3 class="mb-0" style="font-family: 'Cormorant Garamond', serif;">Edit PDF Guide</h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <h6 class="text-muted small mb-2">Current Cover:</h6>
+                                <img src="{{ pdf.thumbnail.url }}" class="img-fluid rounded shadow-sm" alt="Thumbnail">
+                            </div>
+                            <div class="col-md-8">
+                                <h6 class="text-muted small mb-2">Current File:</h6>
+                                <div class="p-3 bg-light rounded border d-flex align-items-center gap-3">
+                                    <i class="bi bi-file-earmark-pdf-fill text-danger display-6"></i>
+                                    <div>
+                                        <div class="fw-bold">{{ pdf.pdf_file.name }}</div>
+                                        <div class="small text-muted">{{ pdf.file_size }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-8 mb-3">{{ form.title.label_tag }}{{ form.title }}</div>
+                                <div class="col-md-4 mb-3">{{ form.category.label_tag }}{{ form.category }}</div>
+                                <div class="col-md-6 mb-3">{{ form.author.label_tag }}{{ form.author }}</div>
+                                <div class="col-md-6 mb-3">{{ form.pages.label_tag }}{{ form.pages }}</div>
+                                <div class="col-md-12 mb-3">{{ form.description.label_tag }}{{ form.description }}</div>
+                                <div class="col-md-6 mb-3">{{ form.thumbnail.label_tag }}{{ form.thumbnail }}</div>
+                                <div class="col-md-6 mb-3">{{ form.pdf_file.label_tag }}{{ form.pdf_file }}</div>
+                            </div>
+                            <div class="d-flex gap-2 mt-4">
+                                <a href="{% url 'pdf_list' %}" class="btn btn-outline-secondary flex-grow-1">Cancel</a>
+                                <button type="submit" class="btn btn-green flex-grow-1">Update Guide</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

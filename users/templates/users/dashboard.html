@@ -1,15 +1,428 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
 
-{% block title %} Dashboard {% endblock %}
+{% block title %}Dashboard | BE2SAHOBE{% endblock %}
 
 {% block content %}
+<style>
+    :root {
+        --sidebar-width: 280px;
+    }
 
-<h2>Welcome {{ request.user.username }}</h2>
+    .dashboard-wrapper {
+        display: flex;
+        min-height: calc(100vh - 80px);
+        background: #f8f9fa;
+    }
 
-<p>This is your dashboard.</p>
+    /* Sidebar Styles */
+    .dashboard-sidebar {
+        width: var(--sidebar-width);
+        background: #fff;
+        border-right: 1px solid rgba(0,0,0,0.05);
+        padding: 30px 0;
+        flex-shrink: 0;
+    }
 
-<a href="{% url 'logout' %}">Logout</a>
+    .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 30px;
+        color: var(--text-mid);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s;
+        border-left: 4px solid transparent;
+    }
 
+    .sidebar-link:hover {
+        background: var(--cream);
+        color: var(--green-main);
+    }
 
+    .sidebar-link.active {
+        background: var(--green-light);
+        color: var(--green-dark);
+        border-left-color: var(--green-main);
+    }
+
+    .sidebar-section-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-light);
+        padding: 20px 30px 10px;
+        font-weight: 700;
+    }
+
+    /* Main Content */
+    .dashboard-main {
+        flex-grow: 1;
+        padding: 40px;
+        overflow-y: auto;
+    }
+
+    .stat-card-mini {
+        background: #fff;
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid rgba(0,0,0,0.04);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    }
+
+    .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    .status-pending { background: #FFC107; color: #000; }
+    .status-approved { background: #28A745; color: #fff; }
+    .status-rejected { background: #DC3545; color: #fff; }
+    .status-completed { background: #6C757D; color: #fff; }
+
+    @media (max-width: 992px) {
+        .dashboard-wrapper { flex-direction: column; }
+        .dashboard-sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(0,0,0,0.05); padding: 10px 0; }
+        .dashboard-sidebar { display: flex; overflow-x: auto; white-space: nowrap; }
+        .sidebar-section-label { display: none; }
+        .sidebar-link { border-left: none; border-bottom: 3px solid transparent; padding: 10px 20px; }
+        .sidebar-link.active { border-bottom-color: var(--green-main); background: transparent; }
+    }
+</style>
+
+<div class="dashboard-wrapper">
+    <!-- Sidebar -->
+    <aside class="dashboard-sidebar">
+        <div class="sidebar-section-label">Personal</div>
+        <a href="?tab=overview" class="sidebar-link {% if active_tab == 'overview' %}active{% endif %}">
+            <i class="bi bi-grid-fill"></i> Overview
+        </a>
+        <a href="?tab=bookings" class="sidebar-link {% if active_tab == 'bookings' %}active{% endif %}">
+            <i class="bi bi-calendar-event-fill"></i> My Bookings
+        </a>
+        <a href="?tab=profile" class="sidebar-link {% if active_tab == 'profile' %}active{% endif %}">
+            <i class="bi bi-person-fill"></i> My Profile
+        </a>
+
+        {% if user.is_staff %}
+        <div class="sidebar-section-label">Management</div>
+        <a href="?tab=manage_bookings" class="sidebar-link {% if active_tab == 'manage_bookings' %}active{% endif %}">
+            <i class="bi bi-shield-lock-fill"></i> Manage Bookings
+        </a>
+        <a href="?tab=members" class="sidebar-link {% if active_tab == 'members' %}active{% endif %}">
+            <i class="bi bi-people-fill"></i> Platform Members
+        </a>
+        {% endif %}
+
+        <div class="mt-auto pt-4">
+            <a href="{% url 'logout' %}" class="sidebar-link text-danger">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        
+        {% if active_tab == 'overview' %}
+            <!-- OVERVIEW TAB -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h2 class="h3 mb-1">Welcome back, {{ user.first_name|default:user.username }}!</h2>
+                    <p class="text-muted">Here is what's happening with your account today.</p>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="stat-card-mini">
+                        <div class="text-muted small mb-1">Total Bookings</div>
+                        <div class="h2 mb-0">{{ total_user }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card-mini">
+                        <div class="text-muted small mb-1">Pending Requests</div>
+                        <div class="h2 mb-0 text-warning">{{ pending_user }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card-mini">
+                        <div class="text-muted small mb-1">Approved Sessions</div>
+                        <div class="h2 mb-0 text-success">{{ approved_user }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="course-card p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="h5 mb-0">Recent Activity</h4>
+                            <a href="?tab=bookings" class="small text-green">View all</a>
+                        </div>
+                        {% if user_bookings %}
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Service</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for booking in user_bookings|slice:":5" %}
+                                        <tr>
+                                            <td><strong>{{ booking.get_service_display }}</strong></td>
+                                            <td>{{ booking.preferred_date|date:"M d, Y" }}</td>
+                                            <td><span class="status-badge status-{{ booking.status }}">{{ booking.get_status_display }}</span></td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <p class="text-center py-4 text-muted">No recent activity.</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="course-card p-4 h-100">
+                        <h4 class="h5 mb-4">Need Help?</h4>
+                        <p class="small text-muted">Our professional support team is ready to assist you with any questions.</p>
+                        <button class="btn-green w-100 mt-2" data-bs-toggle="modal" data-bs-target="#bookingModal">
+                            <i class="bi bi-calendar-plus me-2"></i>New Booking
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        {% elif active_tab == 'bookings' %}
+            <!-- MY BOOKINGS TAB -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="h3 mb-0">My Bookings</h2>
+                <button class="btn-green" data-bs-toggle="modal" data-bs-target="#bookingModal">
+                    <i class="bi bi-calendar-plus me-2"></i>New Booking
+                </button>
+            </div>
+            <div class="course-card p-4">
+                {% if user_bookings %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Service</th>
+                                    <th>Preferred Date/Time</th>
+                                    <th>Status</th>
+                                    <th>Booked On</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in user_bookings %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ booking.get_service_display }}</strong>
+                                        {% if booking.message %}<br><small class="text-muted">{{ booking.message|truncatechars:40 }}</small>{% endif %}
+                                    </td>
+                                    <td>{{ booking.preferred_date|date:"M d, Y" }}<br><small>{{ booking.preferred_time|time:"g:i A"|default:"" }}</small></td>
+                                    <td><span class="status-badge status-{{ booking.status }}">{{ booking.get_status_display }}</span></td>
+                                    <td><small>{{ booking.created_at|date:"M d, Y" }}</small></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-calendar-x fs-1 text-muted"></i>
+                        <h4 class="mt-3">No Bookings Yet</h4>
+                        <p>Start your journey by booking your first session.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+        {% elif active_tab == 'profile' %}
+            <!-- PROFILE TAB -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="h3 mb-0">My Profile</h2>
+                <button type="button" class="btn-outline-green" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                    <i class="bi bi-pencil-square me-2"></i>Edit Profile
+                </button>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="course-card p-4 text-center">
+                        {% if profile.profile_picture and profile.profile_picture.name != 'default.jpg' %}
+                            <img src="{{ profile.profile_picture.url }}" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 3px solid var(--earth);">
+                        {% else %}
+                            <div style="width: 120px; height: 120px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; border: 3px solid var(--earth);">
+                                <i class="bi bi-person fs-1 text-success"></i>
+                            </div>
+                        {% endif %}
+                        <h4 class="mb-1">{{ user.get_full_name|default:user.username }}</h4>
+                        <p class="text-muted small">@{{ user.username }}</p>
+                        <div class="badge bg-light text-dark border p-2 mt-2">Member since {{ user.date_joined|date:"M Y" }}</div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="course-card p-4">
+                        <h5 class="mb-4 border-bottom pb-2">Account Details</h5>
+                        <div class="row g-3">
+                            <div class="col-md-6"><small class="text-muted d-block">Email</small><strong>{{ user.email }}</strong></div>
+                            <div class="col-md-6"><small class="text-muted d-block">Phone</small><strong>{{ profile.phone_number|default:"-" }}</strong></div>
+                            <div class="col-md-6"><small class="text-muted d-block">Gender</small><strong>{{ profile.get_gender_display|default:"-" }}</strong></div>
+                            <div class="col-md-6"><small class="text-muted d-block">Marital Status</small><strong>{{ profile.get_marital_status_display|default:"-" }}</strong></div>
+                            <div class="col-12"><small class="text-muted d-block">Address</small><strong>{{ profile.address|default:"-" }}</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        {% elif active_tab == 'manage_bookings' and user.is_staff %}
+            <!-- MANAGE BOOKINGS TAB (ADMIN) -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="h3 mb-0">Manage Platform Bookings</h2>
+                <div class="d-flex gap-2">
+                    <div class="h4 mb-0 badge bg-primary">Total: {{ admin_stats.total }}</div>
+                    <div class="h4 mb-0 badge bg-warning text-dark">Pending: {{ admin_stats.pending }}</div>
+                </div>
+            </div>
+            
+            <div class="course-card mb-4 p-3">
+                <form method="GET" class="row g-2">
+                    <input type="hidden" name="tab" value="manage_bookings">
+                    <div class="col-md-4"><input type="text" name="search" class="form-control" placeholder="Search by user..." value="{{ search_query }}"></div>
+                    <div class="col-md-3">
+                        <select name="status" class="form-select">
+                            <option value="">All Statuses</option>
+                            <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                            <option value="approved" {% if status_filter == 'approved' %}selected{% endif %}>Approved</option>
+                            <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2"><button type="submit" class="btn-green w-100">Filter</button></div>
+                    <div class="col-md-3"><a href="?tab=manage_bookings" class="btn btn-outline-secondary w-100">Clear</a></div>
+                </form>
+            </div>
+
+            <div class="course-card p-4">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Service</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for booking in all_bookings %}
+                            <tr>
+                                <td><strong>{{ booking.user.username }}</strong><br><small>{{ booking.user.email }}</small></td>
+                                <td>{{ booking.get_service_display }}</td>
+                                <td>{{ booking.preferred_date|date:"M d" }}</td>
+                                <td><span class="status-badge status-{{ booking.status }}">{{ booking.get_status_display }}</span></td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-light border dropdown-toggle" data-bs-toggle="dropdown">Action</button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="{% url 'booking_detail' booking.id %}">View Full Details</a></li>
+                                            {% if booking.status == 'pending' %}
+                                                <li><a class="dropdown-item text-success" href="{% url 'update_booking_status' booking.id 'approved' %}">Approve</a></li>
+                                                <li><a class="dropdown-item text-danger" href="{% url 'update_booking_status' booking.id 'rejected' %}">Reject</a></li>
+                                            {% elif booking.status == 'approved' %}
+                                                <li><a class="dropdown-item text-primary" href="{% url 'update_booking_status' booking.id 'completed' %}">Complete</a></li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="5" class="text-center py-4">No bookings found.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        {% elif active_tab == 'members' and user.is_staff %}
+            <!-- MANAGE MEMBERS TAB (ADMIN) -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="h3 mb-0">Platform Members</h2>
+                <div class="h4 mb-0 badge bg-dark">Total Members: {{ admin_stats.total_members }}</div>
+            </div>
+
+            <div class="course-card mb-4 p-3">
+                <form method="GET" class="row g-2">
+                    <input type="hidden" name="tab" value="members">
+                    <div class="col-md-9"><input type="text" name="member_search" class="form-control" placeholder="Search members by name or username..." value="{{ member_search }}"></div>
+                    <div class="col-md-3"><button type="submit" class="btn-green w-100">Search</button></div>
+                </form>
+            </div>
+
+            <div class="row g-4">
+                {% for member in all_profiles %}
+                <div class="col-md-6 col-xl-4">
+                    <div class="course-card p-3 d-flex align-items-center gap-3">
+                        {% if member.profile_picture and member.profile_picture.name != 'default.jpg' %}
+                            <img src="{{ member.profile_picture.url }}" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                        {% else %}
+                            <div style="width: 50px; height: 50px; border-radius: 50%; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-person text-muted"></i>
+                            </div>
+                        {% endif %}
+                        <div class="overflow-hidden">
+                            <h6 class="mb-0 text-truncate">{{ member.user.get_full_name|default:member.user.username }}</h6>
+                            <small class="text-muted d-block text-truncate">@{{ member.user.username }}</small>
+                            <a href="{% url 'profile_detail' member.user.username %}" class="small text-green text-decoration-none">View Profile →</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </main>
+</div>
+
+<!-- Re-use Edit Profile Modal from original profile.html -->
+<div class="modal fade" id="editProfileModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title">Edit My Profile</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body px-4 pb-4">
+          <form method="POST" action="{% url 'edit_profile' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3"><label class="form-label">Username</label><input type="text" name="username" class="form-control" value="{{ user.username }}"></div>
+            <div class="mb-3"><label class="form-label">Email</label><input type="email" name="email" class="form-control" value="{{ user.email }}"></div>
+            <div class="row">
+                <div class="col-6 mb-3"><label class="form-label">First Name</label><input type="text" name="first_name" class="form-control" value="{{ user.first_name }}"></div>
+                <div class="col-6 mb-3"><label class="form-label">Last Name</label><input type="text" name="last_name" class="form-control" value="{{ user.last_name }}"></div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Phone</label>
+                <input type="text" name="phone_number" class="form-control" value="{{ profile.phone_number }}">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Profile Picture</label>
+                <input type="file" name="profile_picture" class="form-control">
+            </div>
+            <div class="d-flex gap-3 mt-4">
+              <button type="submit" class="btn-green flex-grow-1">Save Changes</button>
+              <button type="button" class="btn-outline-green" data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ viewed_profile.user.get_full_name|default:viewed_profile.user.username }} | BE2SAHOBE{% endblock %}
+
+{% block content %}
+
+<section style="padding: 48px 0 80px 0;">
+  <div class="container">
+    <div class="row">
+      
+      <!-- Back button -->
+      <div class="col-12 mb-4">
+        <a href="{% url 'all_profiles' %}" class="btn-outline-green" style="padding: 8px 20px;">
+          <i class="bi bi-arrow-left me-2"></i>Back to All Members
+        </a>
+      </div>
+      
+      <!-- Profile Card -->
+      <div class="col-lg-4">
+        <div class="course-card" style="padding: 32px 24px; text-align: center;">
+          
+          {% if viewed_profile.profile_picture and viewed_profile.profile_picture.name != 'default.jpg' %}
+            <img src="{{ viewed_profile.profile_picture.url }}" 
+                 alt="{{ viewed_profile.user.username }}"
+                 style="width: 160px; height: 160px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 3px solid var(--earth);">
+          {% else %}
+            <div style="width: 160px; height: 160px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; border: 3px solid var(--earth);">
+              <i class="bi bi-person" style="font-size: 4rem; color: var(--green-main);"></i>
+            </div>
+          {% endif %}
+          
+          <h3 style="font-size: 1.6rem; margin-bottom: 4px;">
+            {{ viewed_profile.user.get_full_name|default:viewed_profile.user.username }}
+          </h3>
+          <p style="color: var(--text-light);">@{{ viewed_profile.user.username }}</p>
+          
+          <div style="margin: 20px 0;">
+            <span class="course-badge" style="background: var(--green-light);">
+              Member since {{ viewed_profile.created_at|date:"M Y" }}
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Profile Details -->
+      <div class="col-lg-8">
+        <div class="course-card" style="padding: 32px;">
+          <h4 style="margin-bottom: 24px;">About {{ viewed_profile.user.first_name|default:viewed_profile.user.username }}</h4>
+          
+          <div class="row g-4">
+            <div class="col-sm-6">
+              <div style="font-size: 0.7rem; color: var(--text-light);">Full Name</div>
+              <div style="font-size: 1rem; font-weight: 500;">{{ viewed_profile.user.get_full_name|default:"Not provided" }}</div>
+            </div>
+            <div class="col-sm-6">
+              <div style="font-size: 0.7rem; color: var(--text-light);">Username</div>
+              <div style="font-size: 1rem; font-weight: 500;">{{ viewed_profile.user.username }}</div>
+            </div>
+            <div class="col-sm-6">
+              <div style="font-size: 0.7rem; color: var(--text-light);">Gender</div>
+              <div style="font-size: 1rem; font-weight: 500;">{{ viewed_profile.get_gender_display|default:"Not provided" }}</div>
+            </div>
+            <div class="col-sm-6">
+              <div style="font-size: 0.7rem; color: var(--text-light);">Marital Status</div>
+              <div style="font-size: 1rem; font-weight: 500;">{{ viewed_profile.get_marital_status_display|default:"Not provided" }}</div>
+            </div>
+            <div class="col-sm-6">
+              <div style="font-size: 0.7rem; color: var(--text-light);">Phone Number</div>
+              <div style="font-size: 1rem; font-weight: 500;">{{ viewed_profile.phone_number|default:"Not provided" }}</div>
+            </div>
+            <div class="col-sm-6">
+              <div style="font-size: 0.7rem; color: var(--text-light);">Location</div>
+              <div style="font-size: 1rem; font-weight: 500;">{{ viewed_profile.address|default:"Not provided" }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- ═══════════════════════════════════════════════
+     HERO / HEADER
+═══════════════════════════════════════════════ -->
+<section id="partners-hero" class="py-6" style="background: linear-gradient(135deg, var(--green-main) 0%, var(--green-dark) 100%); padding: 100px 0;">
+    <div class="container text-center">
+        <span class="section-label" style="background:rgba(255,255,255,0.1); color:var(--gold);">Collaboration</span>
+        <h1 class="display-3 fw-bold text-white mb-4">Our <span style="color:var(--gold);">Strategic Partners</span></h1>
+        <p class="mx-auto text-white-50" style="max-width: 700px; font-size: 1.1rem;">
+            We believe in the power of synergy. By partnering with visionary organizations, we amplify our impact and bring holistic transformation to families across Africa.
+        </p>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     PARTNERS GRID
+═══════════════════════════════════════════════ -->
+<section id="partners-grid" class="py-6 bg-cream" style="padding: 80px 0;">
+    <div class="container">
+        
+        <!-- Category 1: Strategic Partners -->
+        <div class="mb-5 text-center">
+            <span class="section-label">Foundational Partners</span>
+            <h2 class="h3 mb-4">Leading the Way Together</h2>
+        </div>
+        <div class="row g-4 mb-6">
+            <div class="col-md-6 col-lg-4">
+                <div class="pillar-card text-center p-5">
+                    <div class="mb-4 mx-auto" style="width: 120px; height: 120px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--green-main);">
+                        <i class="bi bi-bank"></i>
+                    </div>
+                    <h4 class="h5 mb-3">Ministry of Gender & Family Promotion</h4>
+                    <p class="small text-muted mb-0">Collaborating on national family development policies and community outreach programs.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="pillar-card text-center p-5">
+                    <div class="mb-4 mx-auto" style="width: 120px; height: 120px; border-radius: 50%; background: var(--earth-light); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--earth);">
+                        <i class="bi bi-globe"></i>
+                    </div>
+                    <h4 class="h5 mb-3">MIFAA (NGoP)</h4>
+                    <p class="small text-muted mb-0">Our primary non-profit partner for spiritual guidance and community-led social interventions.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="pillar-card text-center p-5">
+                    <div class="mb-4 mx-auto" style="width: 120px; height: 120px; border-radius: 50%; background: #E3F2FD; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #1976D2;">
+                        <i class="bi bi-cpu"></i>
+                    </div>
+                    <h4 class="h5 mb-3">Tech4Good Rwanda</h4>
+                    <p class="small text-muted mb-0">Providing digital infrastructure and technical support for our online learning ecosystem.</p>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-6" style="opacity: 0.1;">
+
+        <!-- Category 2: Support Partners -->
+        <div class="mt-6 mb-5 text-center">
+            <span class="section-label">Support Network</span>
+            <h2 class="h3 mb-4">Empowering Communities</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="pillar-card text-center py-4 px-3">
+                    <div class="mb-3 mx-auto" style="width: 60px; height: 60px; font-size: 1.5rem; color: var(--text-light);">
+                        <i class="bi bi-heart-pulse"></i>
+                    </div>
+                    <h5 class="h6 mb-0">Health First Rwanda</h5>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="pillar-card text-center py-4 px-3">
+                    <div class="mb-3 mx-auto" style="width: 60px; height: 60px; font-size: 1.5rem; color: var(--text-light);">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+                    <h5 class="h6 mb-0">Agaseke Savings Bank</h5>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="pillar-card text-center py-4 px-3">
+                    <div class="mb-3 mx-auto" style="width: 60px; height: 60px; font-size: 1.5rem; color: var(--text-light);">
+                        <i class="bi bi-book"></i>
+                    </div>
+                    <h5 class="h6 mb-0">L-Way Education</h5>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="pillar-card text-center py-4 px-3">
+                    <div class="mb-3 mx-auto" style="width: 60px; height: 60px; font-size: 1.5rem; color: var(--text-light);">
+                        <i class="bi bi-tree"></i>
+                    </div>
+                    <h5 class="h6 mb-0">Green Earth Initiative</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     BECOME A PARTNER
+═══════════════════════════════════════════════ -->
+<section id="become-partner" class="py-6" style="padding: 80px 0; background: #fff;">
+    <div class="container">
+        <div class="cta-banner text-center" style="background: linear-gradient(135deg, var(--earth) 0%, #9a511f 100%);">
+            <h2 class="section-title text-white" style="font-size:clamp(1.8rem,4vw,2.8rem);">
+                Partner With Us
+            </h2>
+            <p style="color:rgba(255,255,255,0.85); max-width:600px; margin:16px auto 32px; font-size: 1.1rem;">
+                Are you an organization committed to family transformation and holistic living? Let's explore how we can create lasting impact together.
+            </p>
+            <a href="mailto:partners@be2sahobe.com" class="btn-green px-5 py-3" style="background: #fff; color: var(--earth); font-weight: 700;">
+                Get in Touch <i class="bi bi-envelope-plus ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
