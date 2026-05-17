@@ -4,6 +4,11 @@ venv/
 env/
 ENV/
 .venv/
+# Virtual Environments
+venv/
+env/
+ENV/
+.venv/
 .env/
 
 
@@ -12,9 +17,6 @@ ENV/
 .env
 .env.*
 
-
-
-
-
-
-
+__pycache__/
+db.sqlite3
+staticfiles/
