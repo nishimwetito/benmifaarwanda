@@ -1,22 +1,5 @@
-
-# Virtual Environments
 venv/
-env/
-ENV/
-.venv/
-# Virtual Environments
-venv/
-env/
-ENV/
-.venv/
-.env/
-
-
-
-# Environment Variables
-.env
-.env.*
-
 __pycache__/
 db.sqlite3
 staticfiles/
+.env
