@@ -3,7 +3,7 @@
   <div class="container">
     <a class="navbar-brand" href="{% url 'home' %}">
       <i class="bi bi-flower2 me-1" style="color:var(--earth);"></i>
-      BE2SAHOBE <span>LTD</span>
+      CSRMIFAA/B2SHOBE <span>LTD</span>
     </a>
 
     <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
@@ -20,8 +20,6 @@
           </a>
           <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="coursesDropdown"
             style="border-radius: 12px; padding: 10px;">
-            <li><a class="dropdown-item rounded-2 mb-1" href="{% url 'courses' %}"><i
-                  class="bi bi-grid me-2 text-success"></i>All Resources</a></li>
             <li><a class="dropdown-item rounded-2 mb-1" href="{% url 'video_list' %}"><i
                   class="bi bi-youtube me-2 text-danger"></i>Videos</a></li>
             <li><a class="dropdown-item rounded-2 mb-1" href="{% url 'pdf_list' %}"><i
@@ -31,7 +29,6 @@
           </ul>
         </li>
         <li class="nav-item"><a class="nav-link" href="{% url 'professional_support' %}">Services/Support</a></li>
-        <!-- <li class="nav-item"><a class="nav-link" href="{% url 'partners' %}">Partners</a></li> -->
         <li class="nav-item"><a class="nav-link" href="{% url 'gallery' %}">Gallery</a></li>
 
         {% if user.is_authenticated %}
@@ -49,21 +46,11 @@
 
 
         {% else %}
-
-        <!-- SHOW JOIN -->
-        <li class="nav-item ms-2">
-          <a href="#" class="btn-green" data-bs-toggle="modal" data-bs-target="#joinModal">
-            Register
-          </a>
-        </li>
-
-        <!-- SHOW LOGIN -->
         <li class="nav-item ms-2">
           <a href="#" class="btn-green" data-bs-toggle="modal" data-bs-target="#loginModal">
             Login
           </a>
         </li>
-
         {% endif %}
 
         <li class="nav-item ms-lg-3 my-2 my-lg-0">

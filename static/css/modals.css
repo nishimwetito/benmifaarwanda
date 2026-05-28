@@ -1,0 +1,161 @@
+/* Unified app modals (public site + dashboard) */
+
+.modal.app-modal .modal-content,
+.modal .modal-content.app-modal {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 24px 48px rgba(20, 51, 38, 0.18);
+  overflow: hidden;
+}
+
+.modal.app-modal .modal-header,
+.modal .modal-content.app-modal .modal-header {
+  border-bottom: 1px solid var(--border-soft);
+  padding: 1.1rem 1.35rem;
+  background: var(--surface-inset);
+}
+
+.modal.app-modal .modal-header.app-modal-dark,
+.modal .modal-content.app-modal .modal-header.app-modal-dark {
+  background: var(--green-dark);
+  border-bottom: none;
+  color: #fff;
+}
+
+.modal.app-modal .modal-header.app-modal-dark .modal-title,
+.modal .modal-content.app-modal .modal-header.app-modal-dark .modal-title {
+  color: #fff;
+}
+
+.modal.app-modal .modal-title,
+.modal .modal-content.app-modal .modal-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  margin: 0;
+}
+
+.modal.app-modal .modal-body,
+.modal .modal-content.app-modal .modal-body {
+  padding: 1.25rem 1.35rem 1.35rem;
+}
+
+.modal.app-modal .modal-footer,
+.modal .modal-content.app-modal .modal-footer {
+  border-top: 1px solid var(--border-soft);
+  padding: 0.85rem 1.35rem;
+  background: var(--surface-2);
+}
+
+.modal.app-modal .form-label,
+.modal .modal-content.app-modal .form-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-mid);
+  margin-bottom: 0.35rem;
+}
+
+.modal.app-modal .form-control,
+.modal.app-modal .form-select,
+.modal .modal-content.app-modal .form-control,
+.modal .modal-content.app-modal .form-select {
+  border-radius: 10px;
+  border-color: var(--border-soft);
+}
+
+.modal.app-modal .form-control:focus,
+.modal .modal-content.app-modal .form-control:focus {
+  border-color: var(--green-main);
+  box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.12);
+}
+
+.modal.app-modal .modal-lead,
+.modal .modal-content.app-modal .modal-lead {
+  font-size: 0.88rem;
+  color: var(--text-light);
+  margin-bottom: 1.25rem;
+}
+
+.modal.app-modal .modal-switch,
+.modal .modal-content.app-modal .modal-switch {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin-top: 1rem;
+}
+
+.modal.app-modal .modal-switch a,
+.modal .modal-content.app-modal .modal-switch a {
+  color: var(--green-main);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.modal.app-modal .modal-switch a:hover,
+.modal .modal-content.app-modal .modal-switch a:hover {
+  text-decoration: underline;
+}
+
+.donation-method {
+  padding: 1rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+}
+
+.donation-method-head {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.65rem;
+}
+
+.donation-method-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.donation-method-icon.mtn {
+  background: #ffd200;
+  color: #1a1a1a;
+}
+
+.donation-method-icon.bank {
+  background: var(--green-main);
+  color: #fff;
+}
+
+.donation-method-list {
+  margin: 0;
+  padding-left: 2.75rem;
+}
+
+.donation-method-list > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.35rem;
+  font-size: 0.88rem;
+}
+
+.donation-method-list dt {
+  color: var(--text-light);
+  font-weight: 500;
+  margin: 0;
+}
+
+.donation-method-list dd {
+  margin: 0;
+  font-weight: 600;
+  text-align: right;
+}
+
+.donation-account-num {
+  letter-spacing: 0.04em;
+}

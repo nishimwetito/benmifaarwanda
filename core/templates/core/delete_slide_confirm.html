@@ -22,9 +22,10 @@
                         </div>
                         <form method="POST">
                             {% csrf_token %}
+                            {% if return_to_dashboard %}<input type="hidden" name="return" value="dashboard">{% endif %}
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-danger py-3 fw-bold">Delete Presentation Permanently</button>
-                                <a href="{% url 'slides_list' %}" class="btn btn-outline-secondary py-3">No, Go Back</a>
+                                <a href="{% if return_to_dashboard %}{% url 'dashboard' %}?tab=resources&section=slides{% else %}{% url 'slides_list' %}{% endif %}" class="btn btn-outline-secondary py-3">No, Go Back</a>
                             </div>
                         </form>
                     </div>

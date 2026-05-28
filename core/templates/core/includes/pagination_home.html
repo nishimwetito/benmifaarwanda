@@ -1,0 +1,45 @@
+{% if items.has_other_pages %}
+<nav aria-label="Page navigation" class="mt-5">
+  <ul class="pagination justify-content-center">
+    {% if items.has_previous %}
+    <li class="page-item">
+      <a class="page-link shadow-sm border-0" href="?{{ page_param }}={{ items.previous_page_number }}{% if other_page_param and other_page_num %}&{{ other_page_param }}={{ other_page_num }}{% endif %}#{{ anchor }}" style="border-radius: 10px; color: var(--green-dark); margin: 0 5px;">
+        <i class="bi bi-chevron-left"></i>
+      </a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+      <span class="page-link shadow-sm border-0 opacity-50" style="border-radius: 10px; margin: 0 5px;">
+        <i class="bi bi-chevron-left"></i>
+      </span>
+    </li>
+    {% endif %}
+
+    {% for i in items.paginator.page_range %}
+      {% if items.number == i %}
+      <li class="page-item active">
+        <span class="page-link shadow-sm border-0" style="border-radius: 10px; background: var(--green-main); border-color: var(--green-main); margin: 0 5px;">{{ i }}</span>
+      </li>
+      {% elif i > items.number|add:'-3' and i < items.number|add:'3' %}
+      <li class="page-item">
+        <a class="page-link shadow-sm border-0" href="?{{ page_param }}={{ i }}{% if other_page_param and other_page_num %}&{{ other_page_param }}={{ other_page_num }}{% endif %}#{{ anchor }}" style="border-radius: 10px; color: var(--green-dark); margin: 0 5px;">{{ i }}</a>
+      </li>
+      {% endif %}
+    {% endfor %}
+
+    {% if items.has_next %}
+    <li class="page-item">
+      <a class="page-link shadow-sm border-0" href="?{{ page_param }}={{ items.next_page_number }}{% if other_page_param and other_page_num %}&{{ other_page_param }}={{ other_page_num }}{% endif %}#{{ anchor }}" style="border-radius: 10px; color: var(--green-dark); margin: 0 5px;">
+        <i class="bi bi-chevron-right"></i>
+      </a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+      <span class="page-link shadow-sm border-0 opacity-50" style="border-radius: 10px; margin: 0 5px;">
+        <i class="bi bi-chevron-right"></i>
+      </span>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}

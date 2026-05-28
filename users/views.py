@@ -6,28 +6,22 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.models import User
-from . forms import RegisterForm
-from .models import Profile,Booking
+from django.views.decorators.http import require_POST
+from .forms import AdminMemberForm
+from .models import Profile
+from core.forms import SiteSettingsForm, HomepageServiceForm, VideoForm, PDFGuideForm, SlideForm
+from core.models import SiteSettings, ProfessionalSupportService, Video, PDFGuide, Slide
+from core.homepage import save_homepage_selection
 
 
 # Create your views here.
-# REGISTER
 def register_view(request):
-    if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.username = user.username.lower()
-            user.save()
-            messages.success(request, 'User created successfully!')
-            login(request, user)
-            return redirect(f"{reverse('dashboard')}?tab=profile")
-    else:
-        messages.error(request, 'Registration failed')
-        form = RegisterForm()
-
-    context = {'register_form': form}
-    return render(request, 'index.html', context)
+    """Public registration is disabled — only staff can add members."""
+    messages.info(
+        request,
+        'New accounts are created by an administrator. Please sign in or contact support.',
+    )
+    return redirect('home')
 
 
 def login_view(request):
@@ -43,8 +37,10 @@ def login_view(request):
             return redirect(f"{reverse('dashboard')}?tab=profile")
         else:
             messages.error(request, 'Invalid username or password')
+            return redirect(f"{reverse('home')}?login=1")
 
-    return redirect('home')
+    # Login is handled via the homepage modal
+    return redirect(f"{reverse('home')}?login=1")
 
 
 # LOGOUT
@@ -60,7 +56,7 @@ def profile_view(request):
     """
     Redirect to the unified dashboard profile tab.
     """
-    return redirect('/dashboard/?tab=profile')
+    return redirect(f"{reverse('dashboard')}?tab=profile")
 
 
 @login_required
@@ -180,39 +176,16 @@ def user_dashboard(request):
     """
     Unified Dashboard - Handles both regular users and staff.
     """
-    active_tab = request.GET.get('tab', 'overview')
+    active_tab = request.POST.get('tab') or request.GET.get('tab', 'overview')
     user = request.user
     profile = user.profile
-    
-    # 1. User's Own Bookings
-    user_bookings = Booking.objects.filter(user=user).order_by('-created_at')
-    
+
     context = {
         'active_tab': active_tab,
         'profile': profile,
-        'user_bookings': user_bookings,
-        'total_user': user_bookings.count(),
-        'pending_user': user_bookings.filter(status='pending').count(),
-        'approved_user': user_bookings.filter(status='approved').count(),
     }
-    
-    # 2. Staff Specific Data
+
     if user.is_staff:
-        # All Bookings with filters
-        all_bookings = Booking.objects.all().order_by('-created_at')
-        
-        status_filter = request.GET.get('status', '')
-        if status_filter:
-            all_bookings = all_bookings.filter(status=status_filter)
-            
-        search_query = request.GET.get('search', '')
-        if search_query:
-            all_bookings = all_bookings.filter(
-                Q(user__username__icontains=search_query) |
-                Q(user__email__icontains=search_query)
-            )
-            
-        # All Members with search/filter
         all_profiles_list = Profile.objects.select_related('user').all()
         member_search = request.GET.get('member_search', '')
         if member_search:
@@ -221,131 +194,261 @@ def user_dashboard(request):
                 Q(user__first_name__icontains=member_search) |
                 Q(user__last_name__icontains=member_search)
             )
-            
-        # Stats for Admin
-        admin_stats = {
-            'total': Booking.objects.count(),
-            'pending': Booking.objects.filter(status='pending').count(),
-            'approved': Booking.objects.filter(status='approved').count(),
-            'total_members': Profile.objects.count(),
-        }
-        
+
+        member_form = AdminMemberForm()
+
+        if active_tab == 'members' and request.method == 'POST':
+            action = request.POST.get('action', '')
+            if action == 'add_member':
+                member_form = AdminMemberForm(request.POST)
+                if member_form.is_valid():
+                    user = member_form.save()
+                    messages.success(
+                        request,
+                        f'Member "{user.get_full_name() or user.username}" registered successfully.',
+                    )
+                    return redirect(f"{reverse('dashboard')}?tab=members")
+                messages.error(request, 'Could not register member. Check the form below.')
+            elif action == 'delete_member':
+                user_id = request.POST.get('user_id')
+                target = User.objects.filter(id=user_id).first()
+                if not target:
+                    messages.error(request, 'Member not found.')
+                    return redirect(f"{reverse('dashboard')}?tab=members")
+                if target.id == request.user.id:
+                    messages.error(request, 'You cannot delete your own account.')
+                    return redirect(f"{reverse('dashboard')}?tab=members")
+                target.delete()
+                messages.success(request, 'Member deleted successfully.')
+                return redirect(f"{reverse('dashboard')}?tab=members")
+
         context.update({
-            'all_bookings': all_bookings,
             'all_profiles': all_profiles_list,
-            'admin_stats': admin_stats,
-            'status_filter': status_filter,
-            'search_query': search_query,
+            'admin_stats': {'total_members': Profile.objects.count()},
             'member_search': member_search,
+            'member_form': member_form,
+            'dash_stats': {
+                'videos': Video.objects.count(),
+                'pdfs': PDFGuide.objects.count(),
+                'slides': Slide.objects.count(),
+                'members': Profile.objects.count(),
+            },
         })
+
+        if active_tab == 'site_settings':
+            site = SiteSettings.load()
+            if request.method == 'POST':
+                form = SiteSettingsForm(request.POST, request.FILES, instance=site)
+                if form.is_valid():
+                    site = form.save()
+
+                    def _read_list(key):
+                        raw = request.POST.getlist(key)
+                        out = []
+                        for v in raw:
+                            v = (v or '').strip()
+                            if v:
+                                out.append(v)
+                        return out
+
+                    method_titles = request.POST.getlist('donation_title[]')
+                    method_icons = request.POST.getlist('donation_icon[]')
+                    r1_labels = request.POST.getlist('donation_row1_label[]')
+                    r1_values = request.POST.getlist('donation_row1_value[]')
+                    r2_labels = request.POST.getlist('donation_row2_label[]')
+                    r2_values = request.POST.getlist('donation_row2_value[]')
+                    r3_labels = request.POST.getlist('donation_row3_label[]')
+                    r3_values = request.POST.getlist('donation_row3_value[]')
+
+                    pillar_names = request.POST.getlist('pillar_name[]')
+                    pillar_descs = request.POST.getlist('pillar_desc[]')
+                    pillar_accents = request.POST.getlist('pillar_accent[]')
+                    pillars = []
+                    for name, desc, accent in zip(pillar_names, pillar_descs, pillar_accents):
+                        name = (name or '').strip()
+                        desc = (desc or '').strip()
+                        accent = (accent or '').strip() or '#245A42'
+                        if not name and not desc:
+                            continue
+                        pillars.append({'name': name, 'description': desc, 'accent': accent})
+
+                    if pillars:
+                        site.home_pillars = pillars
+                        site.save(update_fields=['home_pillars'])
+
+                    methods = []
+                    rows_len = max(len(method_titles), len(method_icons), len(r1_labels), len(r1_values), len(r2_labels), len(r2_values), len(r3_labels), len(r3_values))
+                    for i in range(rows_len):
+                        title = (method_titles[i] if i < len(method_titles) else '').strip()
+                        icon = (method_icons[i] if i < len(method_icons) else '').strip() or 'bi-bank2'
+                        row1 = {
+                            'label': (r1_labels[i] if i < len(r1_labels) else '').strip(),
+                            'value': (r1_values[i] if i < len(r1_values) else '').strip(),
+                        }
+                        row2 = {
+                            'label': (r2_labels[i] if i < len(r2_labels) else '').strip(),
+                            'value': (r2_values[i] if i < len(r2_values) else '').strip(),
+                        }
+                        row3 = {
+                            'label': (r3_labels[i] if i < len(r3_labels) else '').strip(),
+                            'value': (r3_values[i] if i < len(r3_values) else '').strip(),
+                        }
+                        rows = [r for r in [row1, row2, row3] if r.get('label') or r.get('value')]
+                        if not title and not rows:
+                            continue
+                        methods.append({'title': title or 'Payment method', 'icon': icon, 'rows': rows})
+
+                    if methods:
+                        site.donation_methods = methods
+                        site.save(update_fields=['donation_methods'])
+
+                    video_cats = _read_list('video_category[]')
+                    pdf_cats = _read_list('pdf_category[]')
+                    slide_cats = _read_list('slide_category[]')
+                    gallery_cats = _read_list('gallery_category[]')
+                    if any([video_cats, pdf_cats, slide_cats, gallery_cats]):
+                        site.video_categories = video_cats
+                        site.pdf_categories = pdf_cats
+                        site.slide_categories = slide_cats
+                        site.gallery_categories = gallery_cats
+                        site.save(update_fields=['video_categories', 'pdf_categories', 'slide_categories', 'gallery_categories'])
+                    messages.success(request, 'Site settings saved successfully.')
+                    return redirect(f"{reverse('dashboard')}?tab=site_settings")
+                messages.error(request, 'Please correct the errors below.')
+            else:
+                form = SiteSettingsForm(instance=site)
+            context['site_settings_form'] = form
+            context['home_pillars'] = site.home_pillars or []
+            context['donation_methods'] = site.donation_methods or []
+            context['video_categories'] = site.video_categories or []
+            context['pdf_categories'] = site.pdf_categories or []
+            context['slide_categories'] = site.slide_categories or []
+            context['gallery_categories'] = site.gallery_categories or []
+
+        elif active_tab == 'landing_page':
+            all_videos = Video.objects.order_by(
+                'homepage_order', '-created_at'
+            )
+            all_services = ProfessionalSupportService.objects.order_by(
+                'homepage_order', 'order', '-created_at'
+            )
+            context['all_videos'] = all_videos
+            context['all_services'] = all_services
+            context['featured_videos_count'] = all_videos.filter(show_on_homepage=True).count()
+            context['featured_services_count'] = all_services.filter(show_on_homepage=True).count()
+
+            if request.method == 'POST':
+                action = request.POST.get('action', 'save_selection')
+
+                if action == 'add_service':
+                    service_form = HomepageServiceForm(request.POST)
+                    if service_form.is_valid():
+                        service = service_form.save(commit=False)
+                        if not service.show_on_homepage:
+                            service.show_on_homepage = True
+                        service.save()
+                        messages.success(request, f'Service "{service.title}" added.')
+                        return redirect(f"{reverse('dashboard')}?tab=landing_page")
+                    context['service_form'] = service_form
+                    messages.error(request, 'Could not add service. Check the form below.')
+
+                else:
+                    save_homepage_selection(request)
+                    messages.success(request, 'Landing page selection saved.')
+                    return redirect(f"{reverse('dashboard')}?tab=landing_page")
+
+            if 'service_form' not in context:
+                context['service_form'] = HomepageServiceForm(initial={'show_on_homepage': True})
+
+        elif active_tab == 'resources':
+            video_q = request.GET.get('video_q', '').strip()
+            pdf_q = request.GET.get('pdf_q', '').strip()
+            slide_q = request.GET.get('slide_q', '').strip()
+            manage_section = request.GET.get('section', 'videos')
+
+            videos_qs = Video.objects.order_by('-created_at')
+            pdfs_qs = PDFGuide.objects.order_by('-created_at')
+            slides_qs = Slide.objects.order_by('-created_at')
+
+            if video_q:
+                videos_qs = videos_qs.filter(
+                    Q(title__icontains=video_q) | Q(description__icontains=video_q) | Q(instructor__icontains=video_q)
+                )
+            if pdf_q:
+                pdfs_qs = pdfs_qs.filter(
+                    Q(title__icontains=pdf_q) | Q(description__icontains=pdf_q) | Q(author__icontains=pdf_q)
+                )
+            if slide_q:
+                slides_qs = slides_qs.filter(
+                    Q(title__icontains=slide_q) | Q(description__icontains=slide_q) | Q(presenter__icontains=slide_q)
+                )
+
+            context.update({
+                'resource_stats': {
+                    'videos': Video.objects.count(),
+                    'pdfs': PDFGuide.objects.count(),
+                    'slides': Slide.objects.count(),
+                },
+                'library_videos': videos_qs,
+                'library_pdfs': pdfs_qs,
+                'library_slides': slides_qs,
+                'video_q': video_q,
+                'pdf_q': pdf_q,
+                'slide_q': slide_q,
+                'manage_section': manage_section,
+            })
+
+            video_form = VideoForm()
+            pdf_form = PDFGuideForm()
+            slide_form = SlideForm()
+
+            if request.method == 'POST':
+                action = request.POST.get('action', '')
+
+                if action == 'add_video':
+                    video_form = VideoForm(request.POST, request.FILES)
+                    if video_form.is_valid():
+                        video = video_form.save()
+                        if request.POST.get('feature_on_homepage') == 'on':
+                            video.show_on_homepage = True
+                            video.homepage_order = int(request.POST.get('homepage_order', 0) or 0)
+                            video.save(update_fields=['show_on_homepage', 'homepage_order'])
+                        messages.success(request, 'Video added successfully.')
+                        return redirect(f"{reverse('dashboard')}?tab=resources&section=videos")
+                    messages.error(request, 'Fix errors in the video form.')
+
+                elif action == 'add_pdf':
+                    pdf_form = PDFGuideForm(request.POST, request.FILES)
+                    if pdf_form.is_valid():
+                        pdf_form.save()
+                        messages.success(request, 'PDF guide added successfully.')
+                        return redirect(f"{reverse('dashboard')}?tab=resources&section=pdfs")
+                    messages.error(request, 'Fix errors in the PDF form.')
+
+                elif action == 'add_slide':
+                    slide_form = SlideForm(request.POST, request.FILES)
+                    if slide_form.is_valid():
+                        slide_form.save()
+                        messages.success(request, 'Slides added successfully.')
+                        return redirect(f"{reverse('dashboard')}?tab=resources&section=slides")
+                    messages.error(request, 'Fix errors in the slides form.')
+
+                elif action == 'toggle_video_home':
+                    video = get_object_or_404(Video, pk=request.POST.get('video_id'))
+                    video.show_on_homepage = not video.show_on_homepage
+                    video.save(update_fields=['show_on_homepage'])
+                    state = 'featured on' if video.show_on_homepage else 'removed from'
+                    messages.success(request, f'"{video.title}" {state} the homepage.')
+                    return redirect(f"{reverse('dashboard')}?tab=resources&section=videos")
+
+            context['video_form'] = video_form
+            context['pdf_form'] = pdf_form
+            context['slide_form'] = slide_form
     
     return render(request, 'users/dashboard.html', context)
 
 
-@login_required
-def create_booking(request):
-    """Create a new booking from modal form"""
-    if request.method == 'POST':
-        service = request.POST.get('service')
-        message = request.POST.get('message')
-        preferred_date = request.POST.get('preferred_date')
-        preferred_time = request.POST.get('preferred_time')
-        
-        # Validation
-        if not service or not preferred_date:
-            messages.error(request, "Service and preferred date are required.")
-            return redirect('dashboard')
-        
-        # Create booking
-        Booking.objects.create(
-            user=request.user,
-            service=service,
-            message=message or "",
-            preferred_date=preferred_date,
-            preferred_time=preferred_time or None,
-            status=Booking.Status.PENDING
-        )
-        
-        messages.success(request, "✅ Booking request sent successfully! We will contact you soon.")
-        return redirect('dashboard')
-    
-    return redirect('dashboard')
-
-
-# ============================================================
-# ADMIN VIEWS (Staff Only)
-# ============================================================
-
 @staff_member_required
 def admin_dashboard(request):
-    """
-    Redirect to the unified dashboard management tab.
-    """
-    return redirect('/dashboard/?tab=manage_bookings')
-
-
-@staff_member_required
-def booking_detail(request, booking_id):
-    """View full booking details with user profile information"""
-    booking = get_object_or_404(Booking, id=booking_id)
-    profile = booking.user.profile
-    
-    if request.method == 'POST':
-        action = request.POST.get('action')
-        
-        if action == 'update_status':
-            new_status = request.POST.get('status')
-            if new_status in ['pending', 'approved', 'rejected', 'completed']:
-                booking.status = new_status
-                booking.save()
-                messages.success(request, f"✅ Booking #{booking.id} status updated to {booking.get_status_display()}")
-                return redirect('booking_detail', booking_id=booking.id)
-        
-        elif action == 'delete':
-            booking.delete()
-            messages.success(request, f"🗑️ Booking #{booking_id} has been deleted.")
-            return redirect('admin_dashboard')
-    
-    context = {
-        'booking': booking,
-        'profile': profile,
-    }
-    return render(request, 'users/booking_detail.html', context)
-
-
-@staff_member_required
-def update_booking_status(request, booking_id, status):
-    """Quick update booking status with confirmation"""
-    booking = get_object_or_404(Booking, id=booking_id)
-    
-    valid_statuses = ['approved', 'rejected', 'completed']
-    if status not in valid_statuses:
-        messages.error(request, "Invalid status update.")
-        return redirect('admin_dashboard')
-    
-    booking.status = status
-    booking.save()
-    
-    status_display = {
-        'approved': 'Approved',
-        'rejected': 'Rejected',
-        'completed': 'Completed'
-    }.get(status, status)
-    
-    messages.success(request, f"✅ Booking #{booking.id} has been {status_display}.")
-    return redirect('admin_dashboard')
-
-
-@staff_member_required
-def delete_booking(request, booking_id):
-    """Delete a booking with confirmation"""
-    booking = get_object_or_404(Booking, id=booking_id)
-    
-    if request.method == 'POST':
-        booking_id_value = booking.id
-        booking.delete()
-        messages.success(request, f"🗑️ Booking #{booking_id_value} has been permanently deleted.")
-        return redirect('admin_dashboard')
-    
-    # GET request - show confirmation page
-    return render(request, 'users/confirm_delete.html', {'booking': booking})
+    """Redirect to the unified dashboard."""
+    return redirect(f"{reverse('dashboard')}?tab=members")

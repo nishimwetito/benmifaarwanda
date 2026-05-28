@@ -1,0 +1,56 @@
+{# Single video card — same markup as /courses/video/ #}
+<div class="col-md-6 col-lg-4">
+  <div class="card h-100 border-0 shadow-sm video-card" style="border-radius: var(--radius-lg); overflow: hidden; transition: all 0.3s ease; position: relative; background: var(--surface-inset);">
+    {% if user.is_staff and show_admin_controls %}
+    <div class="admin-controls" style="position: absolute; top: 10px; right: 10px; z-index: 10; display: flex; gap: 5px;">
+      <a href="{% url 'edit_video' video.pk %}" class="btn btn-sm btn-light rounded-circle shadow-sm" title="Edit">
+        <i class="bi bi-pencil-square text-dark"></i>
+      </a>
+      <a href="{% url 'delete_video' video.pk %}" class="btn btn-sm btn-danger rounded-circle shadow-sm" title="Delete">
+        <i class="bi bi-trash"></i>
+      </a>
+    </div>
+    {% endif %}
+
+    <a href="{{ video.direct_youtube_url }}" class="video-thumbnail-container d-block" style="position: relative; cursor: pointer;">
+      <div class="ratio ratio-16x9">
+        <img src="{{ video.thumbnail_url }}" alt="{{ video.title }}" style="object-fit: cover;">
+      </div>
+      <div class="video-play-overlay">
+        <div class="play-icon">
+          <i class="bi bi-youtube"></i>
+        </div>
+      </div>
+    </a>
+
+    <div class="card-body p-4">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span class="badge bg-light text-danger border">{{ video.get_category_display }}</span>
+        <small class="text-muted"><i class="bi bi-calendar3 me-1"></i>{{ video.created_at|date:"M Y" }}</small>
+      </div>
+      <h5 class="card-title fw-bold mb-2">{{ video.title }}</h5>
+      <p class="small text-muted mb-3" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 40px;">{{ video.description }}</p>
+
+      <div class="video-metadata mb-4">
+        <div class="row g-2">
+          <div class="col-6">
+            <div class="small d-flex align-items-center gap-2">
+              <i class="bi bi-person-circle text-danger"></i>
+              <span class="text-truncate">{{ video.instructor }}</span>
+            </div>
+          </div>
+          <div class="col-6 text-end">
+            <div class="small d-flex align-items-center justify-content-end gap-2">
+              <i class="bi bi-clock text-danger"></i>
+              <span>{{ video.duration }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a href="{{ video.direct_youtube_url }}" class="btn btn-danger w-100 d-flex align-items-center justify-content-center gap-2 py-2 fw-bold">
+        <i class="bi bi-youtube"></i> <span>Watch on YouTube</span>
+      </a>
+    </div>
+  </div>
+</div>

@@ -12,37 +12,35 @@
 
       <!-- Left -->
       <div class="col-lg-6">
-        <span class="section-label">Digital Ecosystem for Families</span>
+        <span class="section-label">{{ site.home_hero_badge|default:"Digital Ecosystem for Families" }}</span>
         <h1 class="display-3 fw-bold text-white mb-4" style="line-height:1.15;">
-          Learn. <span style="color:var(--gold);">Grow.</span><br>Thrive. Together.
+          {{ site.home_hero_title_learn|default:"Learn." }} <span style="color:var(--gold);">{{ site.home_hero_title_grow|default:"Grow." }}</span><br>{{ site.home_hero_title_rest|default:"Thrive. Together." }}
         </h1>
         <p class="mb-5" style="color:rgba(255,255,255,0.75); font-size:1.05rem; max-width:540px;">
-          A transformative digital ecosystem empowering families through holistic living — integrating health,
-          education,
-          spiritual growth, economic empowerment, and sustainable community development.
+          {{ site.home_hero_subtitle|default:"A transformative digital ecosystem empowering families through holistic living — integrating health, education, spiritual growth, economic empowerment, and sustainable community development." }}
         </p>
 
         <div class="d-flex flex-wrap gap-3 mb-5">
-          <a href="#courses" class="btn-earth">
-            <i class="bi bi-play-circle-fill me-2"></i>Explore Learning Programs
+          <a href="{{ site.home_cta_primary_url|default:'#learning' }}" class="btn-earth">
+            <i class="bi bi-play-circle-fill me-2"></i>{{ site.home_cta_primary_text|default:"Explore Learning Programs" }}
           </a>
-          <a href="#services" class="btn-outline-green" style="border-color:rgba(255,255,255,0.4);color:#fff;">
-            <i class="bi bi-calendar-heart me-2"></i>Access Professional Support
+          <a href="{{ site.home_cta_secondary_url|default:'#services' }}" class="btn-outline-green" style="border-color:rgba(255,255,255,0.4);color:#fff;">
+            <i class="bi bi-calendar-heart me-2"></i>{{ site.home_cta_secondary_text|default:"Access Professional Support" }}
           </a>
         </div>
 
         <div class="d-flex flex-wrap gap-4">
           <div class="hero-stat">
-            <div class="hero-stat-num">5</div>
-            <div class="hero-stat-label">Holistic Living Pillars</div>
+            <div class="hero-stat-num">{{ site.home_stat_1_num|default:"5" }}</div>
+            <div class="hero-stat-label">{{ site.home_stat_1_label|default:"Holistic Living Pillars" }}</div>
           </div>
           <div class="hero-stat">
-            <div class="hero-stat-num">1</div>
-            <div class="hero-stat-label">Integrated Family Ecosystem</div>
+            <div class="hero-stat-num">{{ site.home_stat_2_num|default:"1" }}</div>
+            <div class="hero-stat-label">{{ site.home_stat_2_label|default:"Integrated Family Ecosystem" }}</div>
           </div>
           <div class="hero-stat">
-            <div class="hero-stat-num">24/7</div>
-            <div class="hero-stat-label">Accessible Digital Support</div>
+            <div class="hero-stat-num">{{ site.home_stat_3_num|default:"24/7" }}</div>
+            <div class="hero-stat-label">{{ site.home_stat_3_label|default:"Accessible Digital Support" }}</div>
           </div>
         </div>
       </div>
@@ -55,30 +53,30 @@
               <i class="bi bi-people-fill"></i>
             </div>
             <div>
-              <h5 class="mb-0" style="font-size:1.1rem;">Your Journey Starts Here</h5>
-              <p class="mb-0" style="font-size:0.8rem;">Education → Support → Action</p>
+              <h5 class="mb-0" style="font-size:1.1rem;">{{ site.home_card_title|default:"Your Journey Starts Here" }}</h5>
+              <p class="mb-0" style="font-size:0.8rem;">{{ site.home_card_subtitle|default:"Education → Support → Action" }}</p>
             </div>
           </div>
           <hr style="margin:16px 0;">
           <div class="hero-check-item">
             <i class="bi bi-check-circle-fill"></i>
-            Holistic Education & Digital Learning Resources
+            {{ site.home_card_item_1|default:"Holistic Education & Digital Learning Resources" }}
           </div>
           <div class="hero-check-item">
             <i class="bi bi-check-circle-fill"></i>
-            Family Counseling, Mentorship & Christian Guidance
+            {{ site.home_card_item_2|default:"Family Counseling, Mentorship & Christian Guidance" }}
           </div>
           <div class="hero-check-item">
             <i class="bi bi-check-circle-fill"></i>
-            Career Development & Economic Empowerment Programs
+            {{ site.home_card_item_3|default:"Career Development & Economic Empowerment Programs" }}
           </div>
           <div class="hero-check-item">
             <i class="bi bi-check-circle-fill"></i>
-            Trusted Professional Consultancy & Community Support Services
+            {{ site.home_card_item_4|default:"Trusted Professional Consultancy & Community Support Services" }}
           </div>
 
-          <a href="#" class="btn-green mt-4 d-block text-center" data-bs-toggle="modal" data-bs-target="#joinModal">
-            Start Your Journey Today
+          <a href="#" class="btn-green mt-4 d-block text-center" data-bs-toggle="modal" data-bs-target="#loginModal">
+            {{ site.home_card_button_text|default:"Start Your Journey Today" }}
           </a>
         </div>
       </div>
@@ -100,104 +98,28 @@
   <div class="pillars-bg-blob pillars-bg-blob-2"></div>
   
   <div class="container">
-    <div class="text-center mb-5 pb-3">
-      <span class="section-label">Our Framework</span>
-      <h2 class="section-title">The Five Foundations of Holistic Living</h2>
+    <div class="text-center mb-4">
+      <span class="section-label">{{ site.home_pillars_label|default:"Our Framework" }}</span>
+      <h2 class="section-title">{{ site.home_pillars_title|default:"The Five Foundations of Holistic Living" }}</h2>
       <div class="divider-line mx-auto"></div>
-      <p class="mx-auto text-mid" style="max-width:600px; font-size: 1.1rem;">
-        We treat the family as a complete system, focusing on five interconnected pillars for sustainable
-        transformation.
-      </p>
     </div>
 
-    <div class="row g-4">
-      <!-- 1. Body -->
-      <div class="col-lg-4 col-md-6">
-        <div class="pillar-card-v3 pillar-border-body">
-          <div class="pillar-number-v3">01</div>
-          <h3 class="pillar-title-v3">The Body</h3>
-          <span class="pillar-label-v3">Physical Vitality</span>
-          <p class="pillar-text-v3">Nurturing health through sustainable nutrition, clean water access, and preventive wellness systems.</p>
-          <div class="pillar-footer-v3">
-             <div class="pillar-tag-v3">Health</div>
-             <div class="pillar-tag-v3">Hygiene</div>
-          </div>
-        </div>
+    <div class="pillars-grid">
+      {% for p in site.home_pillars %}
+      <div class="pillar-card-compact
+        {% if forloop.counter == 1 %}pillar-accent-body{% elif forloop.counter == 2 %}pillar-accent-mind{% elif forloop.counter == 3 %}pillar-accent-spirit{% elif forloop.counter == 4 %}pillar-accent-environment{% elif forloop.counter == 5 %}pillar-accent-economy{% endif %}">
+        <h3 class="pillar-name">{{ p.name }}</h3>
+        <p class="pillar-desc">{{ p.description }}</p>
       </div>
-
-      <!-- 2. Mind -->
-      <div class="col-lg-4 col-md-6">
-        <div class="pillar-card-v3 pillar-border-mind">
-          <div class="pillar-number-v3">02</div>
-          <h3 class="pillar-title-v3">The Mind</h3>
-          <span class="pillar-label-v3">Intellectual Growth</span>
-          <p class="pillar-text-v3">Advancing through digital literacy, career pathfinding, and innovative leadership development.</p>
-          <div class="pillar-footer-v3">
-             <div class="pillar-tag-v3">Education</div>
-             <div class="pillar-tag-v3">Skills</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3. Spirit -->
-      <div class="col-lg-4 col-md-6">
-        <div class="pillar-card-v3 pillar-border-spirit">
-          <div class="pillar-number-v3">03</div>
-          <h3 class="pillar-title-v3">The Spirit</h3>
-          <span class="pillar-label-v3">Core Values</span>
-          <p class="pillar-text-v3">Building strong foundations through family counseling, mentorship, and faith-based guidance.</p>
-          <div class="pillar-footer-v3">
-             <div class="pillar-tag-v3">Mentorship</div>
-             <div class="pillar-tag-v3">Counseling</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 4. Environment -->
-      <div class="col-lg-6">
-        <div class="pillar-card-v3 pillar-border-environment">
-          <div class="pillar-number-v3">04</div>
-          <div class="row align-items-center">
-            <div class="col-md-9">
-              <h3 class="pillar-title-v3">Environment & Technology</h3>
-              <span class="pillar-label-v3">Sustainable Ecosystems</span>
-              <p class="pillar-text-v3">Integrating home productivity, waste management, and social media literacy into daily life.</p>
-            </div>
-          </div>
-          <div class="pillar-footer-v3">
-             <div class="pillar-tag-v3">Sustainability</div>
-             <div class="pillar-tag-v3">Innovation</div>
-             <div class="pillar-tag-v3">Digital Life</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 5. Economy -->
-      <div class="col-lg-6">
-        <div class="pillar-card-v3 pillar-border-economy">
-          <div class="pillar-number-v3">05</div>
-          <div class="row align-items-center">
-            <div class="col-md-9">
-              <h3 class="pillar-title-v3">The Economy</h3>
-              <span class="pillar-label-v3">Financial Freedom</span>
-              <p class="pillar-text-v3">Empowering families through IKIGEGA savings, strategic budgeting, and business scaling.</p>
-            </div>
-          </div>
-          <div class="pillar-footer-v3">
-             <div class="pillar-tag-v3">Savings</div>
-             <div class="pillar-tag-v3">Investment</div>
-             <div class="pillar-tag-v3">Budgeting</div>
-          </div>
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </div>
 </section>
 
 <style>
   .pillars-section-modern {
-    padding: 120px 0;
-    background-color: #FAF7F2; /* Base Cream */
+    padding: 56px 0 64px;
+    background-color: var(--cream);
     position: relative;
     overflow: hidden;
   }
@@ -205,35 +127,26 @@
   .pillars-bg-blob {
     position: absolute;
     border-radius: 50%;
-    filter: blur(80px);
+    filter: blur(60px);
     z-index: 0;
-    opacity: 0.4;
+    opacity: 0.35;
+    pointer-events: none;
   }
 
   .pillars-bg-blob-1 {
-    top: -100px;
-    right: -100px;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(44, 96, 68, 0.15) 0%, transparent 70%);
+    top: -80px;
+    right: -80px;
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle, rgba(44, 96, 68, 0.12) 0%, transparent 70%);
   }
 
   .pillars-bg-blob-2 {
-    bottom: -150px;
-    left: -150px;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(184, 100, 42, 0.12) 0%, transparent 70%);
-  }
-
-  .pillars-section-modern::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231b3a28' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    opacity: 0.5;
-    z-index: 1;
-    pointer-events: none;
+    bottom: -100px;
+    left: -100px;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(184, 100, 42, 0.1) 0%, transparent 70%);
   }
 
   .pillars-section-modern .container {
@@ -241,97 +154,67 @@
     z-index: 2;
   }
 
-  .pillar-card-v3 {
-    background: #fff;
-    border-radius: 20px;
-    padding: 50px 35px;
-    height: 100%;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.02);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    border-top-width: 5px; /* The Accent Bar */
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.85rem;
+    align-items: stretch;
   }
 
-  /* Accent Colors */
-  .pillar-border-body { border-top-color: #2E7D32; }
-  .pillar-border-mind { border-top-color: #1565C0; }
-  .pillar-border-spirit { border-top-color: #7B1FA2; }
-  .pillar-border-environment { border-top-color: #E65100; }
-  .pillar-border-economy { border-top-color: var(--earth); }
-
-  .pillar-card-v3:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 30px 60px rgba(0,0,0,0.06);
-    background: var(--cream);
+  .pillar-card-compact {
+    --accent: var(--green-main);
+    background: var(--surface-inset);
+    border: 1px solid var(--border-soft);
+    border-radius: 14px;
+    padding: 1rem 0.9rem;
+    box-shadow: 0 4px 16px rgba(20, 51, 38, 0.05);
+    border-top: 3px solid var(--accent);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
-  .pillar-number-v3 {
-    position: absolute;
-    top: 25px;
-    right: 30px;
-    font-size: 4rem;
-    font-weight: 900;
-    color: rgba(0, 0, 0, 0.04);
-    line-height: 1;
+  .pillar-card-compact:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(20, 51, 38, 0.08);
+  }
+
+  .pillar-accent-body { --accent: #2e7d32; }
+  .pillar-accent-mind { --accent: #1565c0; }
+  .pillar-accent-spirit { --accent: #7b1fa2; }
+  .pillar-accent-environment { --accent: #00acc1; }
+  .pillar-accent-economy { --accent: var(--earth); }
+
+  .pillar-name {
     font-family: 'DM Sans', sans-serif;
-    transition: color 0.4s ease;
-  }
-
-  .pillar-card-v3:hover .pillar-number-v3 {
-    color: rgba(0, 0, 0, 0.08);
-  }
-
-  .pillar-title-v3 {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 1.6rem;
-    font-weight: 800;
-    margin-bottom: 8px;
-    color: var(--green-dark);
-    letter-spacing: -0.02em;
-  }
-
-  .pillar-label-v3 {
-    display: inline-block;
-    font-size: 0.7rem;
+    font-size: 0.95rem;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--earth);
-    margin-bottom: 25px;
-    padding: 4px 12px;
-    background: var(--earth-light);
-    border-radius: 6px;
-    width: fit-content;
+    color: var(--green-dark);
+    margin: 0 0 0.4rem;
+    line-height: 1.25;
   }
 
-  .pillar-text-v3 {
-    font-size: 1rem;
+  .pillar-desc {
+    font-size: 0.78rem;
     color: var(--text-mid);
-    line-height: 1.7;
-    margin-bottom: 30px;
-    flex-grow: 1;
+    line-height: 1.45;
+    margin: 0;
   }
 
-  .pillar-footer-v3 {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(0,0,0,0.05);
+  @media (max-width: 1199px) {
+    .pillars-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 
-  .pillar-tag-v3 {
-    font-size: 0.68rem;
-    font-weight: 600;
-    color: var(--green-main);
-    background: rgba(44, 96, 68, 0.05);
-    padding: 2px 10px;
-    border-radius: 4px;
-    text-transform: uppercase;
+  @media (max-width: 767px) {
+    .pillars-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 479px) {
+    .pillars-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 
@@ -342,7 +225,7 @@
 <!-- ═══════════════════════════════════════════════
      COURSES / LEARNING CENTER
 ═══════════════════════════════════════════════ -->
-<section id="courses" style="background: #fff; padding:100px 0; position: relative;">
+<section id="learning" class="section-surface" style="padding:100px 0; position: relative;">
   <div class="container">
     <div class="row align-items-end mb-5">
       <div class="col-md-7">
@@ -355,207 +238,36 @@
         </p>
       </div>
       <div class="col-md-5 text-md-end mt-3 mt-md-0">
-        <a href="{% url 'courses' %}" class="btn-outline-green px-4">
-          Explore All Resources <i class="bi bi-arrow-right ms-2"></i>
+        <a href="{% url 'video_list' %}" class="btn-outline-green px-4">
+          Explore All Videos <i class="bi bi-arrow-right ms-2"></i>
         </a>
       </div>
     </div>
 
     <div class="row g-4">
-      {% for course in courses %}
-      <div class="col-md-4">
-        <div class="course-card border-0 shadow-lg position-relative overflow-hidden h-100"
-          style="border-radius: 24px;">
-          <div class="course-thumb position-relative" style="height: 280px; overflow: hidden;">
-            <a href="{% url 'courses' %}?q={{ course.title|urlencode }}">
-              <img
-                src="{{ course.thumbnail.url }}"
-                alt="{{ course.title }}" class="w-100 h-100"
-                style="object-fit:cover; transition: transform 0.6s ease;">
-            </a>
-            <div class="position-absolute top-0 end-0 m-3">
-              <a href="{% url 'courses' %}?q={{ course.title|urlencode }}" class="text-decoration-none">
-                {% if course.videos.exists %}
-                <span class="badge bg-white text-dark shadow-sm px-3 py-2" style="border-radius: 12px; font-weight: 600;">
-                  <i class="bi bi-play-circle-fill text-danger me-1"></i> Video
-                </span>
-                {% elif course.pdfs.exists %}
-                <span class="badge bg-white text-dark shadow-sm px-3 py-2" style="border-radius: 12px; font-weight: 600;">
-                  <i class="bi bi-file-earmark-pdf-fill text-danger me-1"></i> PDF Guide
-                </span>
-                {% elif course.slides.exists %}
-                <span class="badge bg-white text-dark shadow-sm px-3 py-2" style="border-radius: 12px; font-weight: 600;">
-                  <i class="bi bi-projector-fill text-primary me-1"></i> Slides
-                </span>
-                {% else %}
-                <span class="badge bg-white text-dark shadow-sm px-3 py-2" style="border-radius: 12px; font-weight: 600;">
-                  <i class="bi bi-journal-text text-success me-1"></i> Course
-                </span>
-                {% endif %}
-              </a>
-            </div>
-            <div class="position-absolute bottom-0 start-0 w-100 p-4"
-              style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
-              <h4 class="text-white mb-0" style="font-family: 'DM Sans', sans-serif; font-weight: 700;">{{ course.title }}</h4>
-            </div>
-          </div>
-          <div class="course-card-body p-4 bg-white">
-            <div class="d-flex align-items-center gap-3 mb-3 small text-muted">
-              <span><i class="bi bi-journal-text me-1"></i> {{ course.videos.count|add:course.pdfs.count|add:course.slides.count }} Resources</span>
-              <span><i class="bi bi-clock me-1"></i> {{ course.duration }}</span>
-            </div>
-            <p class="small text-mid mb-4" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 40px;">
-              {{ course.description }}
-            </p>
-            
-            <a href="{% url 'courses' %}?q={{ course.title|urlencode }}" class="btn-green w-100 py-3 shadow-sm" style="border-radius: 14px;">
-              {% if course.videos.exists %}
-              <i class="bi bi-play-circle me-1"></i> Start Learning
-              {% elif course.pdfs.exists %}
-              <i class="bi bi-download me-1"></i> Download Guide
-              {% elif course.slides.exists %}
-              <i class="bi bi-projector me-1"></i> View Slides
-              {% else %}
-              <i class="bi bi-eye me-1"></i> View Details
-              {% endif %}
-            </a>
-          </div>
-        </div>
-      </div>
+      {% for video in featured_videos %}
+        {% include 'core/includes/video_card.html' with video=video show_admin_controls=False %}
       {% empty %}
       <div class="col-12 text-center py-5">
-        <p class="text-muted">No courses available at the moment. Please check back later.</p>
+        <div class="mb-3">
+          <i class="bi bi-camera-video-off display-1 text-muted opacity-25"></i>
+        </div>
+        <p class="text-muted mb-0">No videos are featured on the homepage yet. Staff can select them in Dashboard → Landing Page, or add videos at <a href="{% url 'video_list' %}">Learning Materials → Videos</a>.</p>
       </div>
       {% endfor %}
     </div>
+
+    {% include 'core/includes/pagination_home.html' with items=featured_videos page_param='videos_page' anchor='learning' other_page_param='services_page' other_page_num=services_page_num %}
   </div>
 </section>
 
-<style>
-  .course-card:hover .course-thumb img {
-    transform: scale(1.1);
-  }
+{% include 'core/includes/video_card_styles.html' %}
 
-  .course-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .course-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 30px 60px rgba(27, 58, 40, 0.15) !important;
-  }
-</style>
-
-
-<!-- ═══════════════════════════════════════════════
-     SERVICES
-═══════════════════════════════════════════════ -->
-<!-- ═══════════════════════════════════════════════
-     SERVICES / PROFESSIONAL SUPPORT
-═══════════════════════════════════════════════ -->
-<!-- ═══════════════════════════════════════════════
-     SERVICES / PROFESSIONAL SUPPORT
-═══════════════════════════════════════════════ -->
-<!-- ═══════════════════════════════════════════════
-     SERVICES / PROFESSIONAL SUPPORT (HIDDEN FOR NOW)
-═══════════════════════════════════════════════ 
-<section id="services-old" style="padding:100px 0; background-color: #fff;">
-  <div class="container">
-    <div class="row align-items-end mb-5">
-      <div class="col-md-7 text-center text-md-start">
-        <span class="section-label">Professional Support</span>
-        <h2 class="section-title">Expert Guidance & Counseling</h2>
-        <div class="divider-line mx-auto mx-md-0"></div>
-        <p class="text-mid mx-auto mx-md-0" style="max-width: 500px;">
-          Connect with certified professionals for personalized support. We provide actionable advice to help your
-          family navigate life's complexities.
-        </p>
-      </div>
-      <div class="col-md-5 text-md-end mt-3 mt-md-0 text-center">
-        <a href="{% url 'professional_support' %}" class="btn-outline-green px-4">
-          View All Services <i class="bi bi-arrow-right ms-2"></i>
-        </a>
-      </div>
-    </div>
-
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="service-card-modern shadow-sm">
-          <div class="service-img-wrap">
-            <img
-              src="https://images.pexels.com/photos/4101143/pexels-photo-4101143.jpeg?auto=compress&cs=tinysrgb&w=800"
-              alt="Family counseling session">
-            <div class="service-icon-float">
-              <i class="bi bi-chat-heart-fill"></i>
-            </div>
-          </div>
-          <div class="p-4">
-            <h4 class="h5 fw-bold mb-2">Family Counseling</h4>
-            <p class="small text-mid mb-4">Marriage, parenting, and conflict resolution by certified professional
-              counselors.</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="small fw-semibold text-green"><i class="bi bi-clock me-1"></i> 60 Min Session</span>
-              <a href="#" class="btn-green btn-sm px-3" data-bs-toggle="modal" data-bs-target="#bookingModal">Book
-                Now</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="service-card-modern shadow-sm">
-          <div class="service-img-wrap">
-            <img
-              src="https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=800"
-              alt="Business consulting meeting">
-            <div class="service-icon-float" style="background: var(--earth);">
-              <i class="bi bi-briefcase-fill"></i>
-            </div>
-          </div>
-          <div class="p-4">
-            <h4 class="h5 fw-bold mb-2">Business Consulting</h4>
-            <p class="small text-mid mb-4">Farming projects, small business setup, and financial planning tailored to
-              families.</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="small fw-semibold text-green"><i class="bi bi-shield-check me-1"></i> Expert Advice</span>
-              <a href="#" class="btn-green btn-sm px-3" data-bs-toggle="modal" data-bs-target="#bookingModal">Book
-                Now</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="service-card-modern shadow-sm">
-          <div class="service-img-wrap">
-            <img
-              src="https://images.pexels.com/photos/7648510/pexels-photo-7648510.jpeg?auto=compress&cs=tinysrgb&w=800"
-              alt="Group training workshop">
-            <div class="service-icon-float" style="background: var(--gold);">
-              <i class="bi bi-people-fill"></i>
-            </div>
-          </div>
-          <div class="p-4">
-            <h4 class="h5 fw-bold mb-2">Group Training</h4>
-            <p class="small text-mid mb-4">Workshops for churches, cooperatives, women groups, and community
-              organizations.</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="small fw-semibold text-green"><i class="bi bi-geo-alt me-1"></i> On-Site/Virtual</span>
-              <a href="#" class="btn-green btn-sm px-3" data-bs-toggle="modal" data-bs-target="#bookingModal">Book
-                Now</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-═══════════════════════════════════════════════ -->
 
 <!-- ═══════════════════════════════════════════════
      SERVICES / TECHNICAL CONSULTANCY
 ═══════════════════════════════════════════════ -->
-<section id="services" style="padding:100px 0; background-color: #fff;">
+<section id="services" class="section-surface" style="padding:100px 0;">
   <div class="container">
     <div class="row align-items-end mb-5">
       <div class="col-md-7 text-center text-md-start">
@@ -574,124 +286,20 @@
     </div>
 
     <div class="row g-4">
-      <!-- Service 1: Project Design & M&E -->
-      <div class="col-md-4">
-        <div class="service-card-modern shadow-sm">
-          <div class="service-img-wrap">
-            <img
-              src="https://images.pexels.com/photos/3182812/pexels-photo-3182812.jpeg?auto=compress&cs=tinysrgb&w=800"
-              alt="Project Design & M&E">
-            <div class="service-icon-float" style="background: var(--green-dark);">
-              <i class="bi bi-diagram-3-fill"></i>
-            </div>
-          </div>
-          <div class="p-4">
-            <h4 class="h5 fw-bold mb-2">Project Design & M&E</h4>
-            <p class="small text-mid mb-4">Professional framework design, monitoring, and evaluation for community development and social impact projects.</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="small fw-semibold text-green"><i class="bi bi-clipboard-check me-1"></i> Data-Driven</span>
-              <a href="#" class="btn-green btn-sm px-3" data-bs-toggle="modal" data-bs-target="#bookingModal">Get Quote</a>
-            </div>
-          </div>
-        </div>
+      {% for service in services %}
+        {% include 'core/includes/service_card.html' with service=service %}
+      {% empty %}
+      <div class="col-12 text-center py-5">
+        <p class="text-muted mb-0">No services are featured on the homepage yet. Staff can select them in Dashboard → Landing Page.</p>
       </div>
-
-      <!-- Service 2: Business Document Design -->
-      <div class="col-md-4">
-        <div class="service-card-modern shadow-sm">
-          <div class="service-img-wrap">
-            <img
-              src="https://images.pexels.com/photos/3183153/pexels-photo-3183153.jpeg?auto=compress&cs=tinysrgb&w=800"
-              alt="Business Document Design">
-            <div class="service-icon-float" style="background: var(--earth);">
-              <i class="bi bi-file-earmark-richtext-fill"></i>
-            </div>
-          </div>
-          <div class="p-4">
-            <h4 class="h5 fw-bold mb-2">Business Document Design</h4>
-            <p class="small text-mid mb-4">High-impact design for company profiles, annual reports, funding proposals, and corporate presentations.</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="small fw-semibold text-green"><i class="bi bi-palette-fill me-1"></i> Professional Branding</span>
-              <a href="#" class="btn-green btn-sm px-3" data-bs-toggle="modal" data-bs-target="#bookingModal">Get Quote</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Service 3: Business Planning -->
-      <div class="col-md-4">
-        <div class="service-card-modern shadow-sm">
-          <div class="service-img-wrap">
-            <img
-              src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=800"
-              alt="Business Planning">
-            <div class="service-icon-float" style="background: var(--gold);">
-              <i class="bi bi-rocket-takeoff-fill"></i>
-            </div>
-          </div>
-          <div class="p-4">
-            <h4 class="h5 fw-bold mb-2">Business Planning</h4>
-            <p class="small text-mid mb-4">Strategic business modeling, market analysis, and financial forecasting to launch or scale your venture.</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="small fw-semibold text-green"><i class="bi bi-signpost-split-fill me-1"></i> Strategic Growth</span>
-              <a href="#" class="btn-green btn-sm px-3" data-bs-toggle="modal" data-bs-target="#bookingModal">Get Quote</a>
-            </div>
-          </div>
-        </div>
-      </div>
+      {% endfor %}
     </div>
+
+    {% include 'core/includes/pagination_home.html' with items=services page_param='services_page' anchor='services' other_page_param='videos_page' other_page_num=videos_page_num %}
   </div>
 </section>
 
-<style>
-  .service-card-modern {
-    background: #fff;
-    border-radius: 20px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    height: 100%;
-  }
-
-  .service-card-modern:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
-  }
-
-  .service-img-wrap {
-    height: 200px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .service-img-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-  }
-
-  .service-card-modern:hover .service-img-wrap img {
-    transform: scale(1.05);
-  }
-
-  .service-icon-float {
-    position: absolute;
-    bottom: -20px;
-    right: 24px;
-    width: 50px;
-    height: 50px;
-    background: var(--green-main);
-    color: #fff;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-    z-index: 2;
-  }
-</style>
+{% include 'core/includes/service_card_styles.html' %}
 
 
 <!-- ═══════════════════════════════════════════════
@@ -891,10 +499,10 @@
 
 <style>
   .testimonial-card-modern {
-    background: #fff;
+    background: var(--surface-inset);
     border-radius: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
-    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--border-soft);
     transition: all 0.3s ease;
   }
 
@@ -935,7 +543,7 @@
       <p style="color:rgba(255,255,255,0.75); max-width:520px; margin:16px auto 32px;">
         We do not just teach — we help families implement real, lasting change in every area of life.
       </p>
-      <a href="#" class="btn-earth px-5 py-3" data-bs-toggle="modal" data-bs-target="#joinModal">
+      <a href="#" class="btn-earth px-5 py-3" data-bs-toggle="modal" data-bs-target="#loginModal">
         Start Your Journey Today <i class="bi bi-arrow-right ms-2"></i>
       </a>
     </div>

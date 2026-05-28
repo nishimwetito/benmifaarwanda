@@ -39,49 +39,16 @@
             <div class="col-md-6 text-md-end mt-3 mt-md-0">
                 <div class="d-flex flex-wrap justify-content-md-end gap-2 align-items-center">
                     {% if user.is_staff %}
-                    <button class="btn btn-gold shadow-sm d-flex align-items-center gap-2 me-3" data-bs-toggle="modal" data-bs-target="#uploadSlideModal">
-                        <i class="bi bi-plus-circle"></i> Add Presentation
-                    </button>
+                    <a href="{% url 'dashboard' %}?tab=resources&section=slides" class="btn btn-gold shadow-sm d-inline-flex align-items-center gap-2">
+                        <i class="bi bi-gear"></i> Manage
+                    </a>
                     {% endif %}
-                    <a href="{% url 'courses' %}" class="btn-outline-green">All Resources</a>
                     <a href="{% url 'video_list' %}" class="btn-outline-green">Videos</a>
                     <a href="{% url 'pdf_list' %}" class="btn-outline-green">PDF Guides</a>
-                    <a href="{% url 'slides_list' %}" class="btn-green shadow-sm">Slides</a>
+                    <a href="{% url 'slides_list' %}" class="btn-green is-active">Slides</a>
                 </div>
             </div>
         </div>
-
-        {% if user.is_staff %}
-        <!-- Upload Slide Modal -->
-        <div class="modal fade" id="uploadSlideModal" tabindex="-1" aria-labelledby="uploadSlideModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content" style="border-radius: 20px; overflow: hidden;">
-                    <div class="modal-header" style="background: var(--green-dark); color: white;">
-                        <h5 class="modal-title" id="uploadSlideModalLabel">Add New Presentation</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form method="POST" enctype="multipart/form-data">
-                        <div class="modal-body p-4">
-                            {% csrf_token %}
-                            <div class="row">
-                                <div class="col-md-8 mb-3">{{ slide_form.title.label_tag }}{{ slide_form.title }}</div>
-                                <div class="col-md-4 mb-3">{{ slide_form.category.label_tag }}{{ slide_form.category }}</div>
-                                <div class="col-md-6 mb-3">{{ slide_form.presenter.label_tag }}{{ slide_form.presenter }}</div>
-                                <div class="col-md-6 mb-3">{{ slide_form.slides_count.label_tag }}{{ slide_form.slides_count }}</div>
-                                <div class="col-md-12 mb-3">{{ slide_form.description.label_tag }}{{ slide_form.description }}</div>
-                                <div class="col-md-6 mb-3">{{ slide_form.thumbnail.label_tag }}{{ slide_form.thumbnail }}</div>
-                                <div class="col-md-6 mb-3">{{ slide_form.slide_file.label_tag }}{{ slide_form.slide_file }}</div>
-                            </div>
-                        </div>
-                        <div class="modal-footer bg-light border-0">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-green px-4">Save Presentation</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        {% endif %}
 
         <div class="row g-4">
             {% for slide in slides %}
@@ -130,7 +97,7 @@
                             </div>
                         </div>
                         
-                        <a href="{{ slide.slide_file.url }}" target="_blank" class="btn-outline-green w-100 d-flex justify-content-between align-items-center">
+                        <a href="{{ slide.slide_file.url }}" class="btn-outline-green w-100 d-flex justify-content-between align-items-center">
                             <span>View Presentation</span>
                             <i class="bi bi-eye"></i>
                         </a>

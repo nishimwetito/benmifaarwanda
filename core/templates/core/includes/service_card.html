@@ -1,0 +1,16 @@
+<div class="col-md-6 col-lg-4">
+  <div class="card h-100 border-0 shadow-sm service-card-support">
+    <div class="service-thumb-support">
+      <img src="{{ service.image_url }}" alt="{{ service.image_alt|default:service.title }}">
+    </div>
+    <div class="card-body p-4 text-center d-flex flex-column">
+      <h5 class="fw-bold mb-3">{{ service.title }}</h5>
+      <p class="small text-muted mb-4 flex-grow-1">{{ service.description }}</p>
+      <a href="{{ whatsapp_url }}?text={{ 'Hello, I am interested in your professional support services.'|urlencode }}"
+         class="btn-outline-green btn-sm px-4 mt-auto"
+        >
+        <i class="bi bi-whatsapp me-1"></i>Message on WhatsApp
+      </a>
+    </div>
+  </div>
+</div>

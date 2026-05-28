@@ -31,6 +31,7 @@
                         </div>
                         <form method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
+                            {% if return_to_dashboard %}<input type="hidden" name="return" value="dashboard">{% endif %}
                             <div class="row">
                                 <div class="col-md-8 mb-3">{{ form.title.label_tag }}{{ form.title }}</div>
                                 <div class="col-md-4 mb-3">{{ form.category.label_tag }}{{ form.category }}</div>
@@ -41,7 +42,7 @@
                                 <div class="col-md-6 mb-3">{{ form.slide_file.label_tag }}{{ form.slide_file }}</div>
                             </div>
                             <div class="d-flex gap-2 mt-4">
-                                <a href="{% url 'slides_list' %}" class="btn btn-outline-secondary flex-grow-1">Cancel</a>
+                                <a href="{% if return_to_dashboard %}{% url 'dashboard' %}?tab=resources&section=slides{% else %}{% url 'slides_list' %}{% endif %}" class="btn btn-outline-secondary flex-grow-1">Cancel</a>
                                 <button type="submit" class="btn btn-primary flex-grow-1">Update Presentation</button>
                             </div>
                         </form>

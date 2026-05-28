@@ -1,0 +1,529 @@
+<form method="POST" enctype="multipart/form-data" id="siteSettingsForm">
+  {% csrf_token %}
+  <input type="hidden" name="tab" value="site_settings">
+
+  {% if site_settings_form.errors %}
+    <div class="alert alert-danger">
+      <div class="fw-semibold mb-1">Please correct the errors below.</div>
+      {% if site_settings_form.non_field_errors %}
+        <div class="small">{{ site_settings_form.non_field_errors.0 }}</div>
+      {% endif %}
+      <ul class="small mb-0">
+        {% for field, errs in site_settings_form.errors.items %}
+          {% if field != '__all__' %}
+            <li><strong>{{ field|capfirst }}</strong>: {{ errs.0 }}</li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  <div class="accordion dash-accordion" id="settingsAccordion">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#settingsContact" aria-expanded="true">
+          <i class="bi bi-telephone me-2"></i> Contact &amp; footer
+        </button>
+      </h2>
+      <div id="settingsContact" class="accordion-collapse collapse show" data-bs-parent="#settingsAccordion">
+        <div class="accordion-body">
+          <div class="row g-3">
+            <div class="col-md-4"><label class="form-label">Address</label>{{ site_settings_form.contact_address }}</div>
+            <div class="col-md-4"><label class="form-label">Phone</label>{{ site_settings_form.contact_phone }}</div>
+            <div class="col-md-4"><label class="form-label">Email</label>{{ site_settings_form.contact_email }}</div>
+            <div class="col-md-4">
+              <label class="form-label">WhatsApp number</label>
+              {{ site_settings_form.whatsapp_number }}
+              <div class="form-text">Used for all WhatsApp buttons site-wide (no + or spaces, e.g. 250783558316).</div>
+            </div>
+            <div class="col-md-6"><label class="form-label">Facebook</label>{{ site_settings_form.facebook_url }}</div>
+            <div class="col-md-6"><label class="form-label">Twitter / X</label>{{ site_settings_form.twitter_url }}</div>
+            <div class="col-md-6"><label class="form-label">Instagram</label>{{ site_settings_form.instagram_url }}</div>
+            <div class="col-md-6"><label class="form-label">YouTube</label>{{ site_settings_form.youtube_url }}</div>
+            <div class="col-12"><label class="form-label">Footer tagline</label>{{ site_settings_form.footer_tagline }}</div>
+            <div class="col-12"><label class="form-label">Copyright line</label>{{ site_settings_form.footer_copyright }}</div>
+
+            <div class="col-12"><hr class="my-1 opacity-25"><span class="small text-muted text-uppercase fw-semibold">Donation modal</span></div>
+            <div class="col-md-6"><label class="form-label">Modal title</label>{{ site_settings_form.donation_modal_title }}</div>
+            <div class="col-md-6"><label class="form-label">Mobile Money account name</label>{{ site_settings_form.momo_account_name }}</div>
+            <div class="col-12"><label class="form-label">Modal subtitle</label>{{ site_settings_form.donation_modal_subtitle }}</div>
+            <div class="col-12">
+              <div class="alert alert-light border mb-0">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                  <div>
+                    <div class="fw-semibold">Payment methods (dynamic)</div>
+                    <div class="small text-muted">Add/remove Mobile Money numbers and multiple bank accounts. These appear inside the Support modal.</div>
+                  </div>
+                  <button type="button" class="btn btn-sm btn-outline-success" id="addDonationMethodBtn">
+                    <i class="bi bi-plus-lg me-1"></i> Add method
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12" id="donationMethodsList">
+              {% for m in donation_methods %}
+              <div class="card border-0 shadow-sm mb-2 donation-method-row">
+                <div class="card-body">
+                  <div class="row g-2 align-items-end">
+                    <div class="col-md-6">
+                      <label class="form-label">Method title</label>
+                      <input type="text" name="donation_title[]" class="form-control" value="{{ m.title }}">
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Icon class</label>
+                      <input type="text" name="donation_icon[]" class="form-control" value="{{ m.icon|default:'bi-bank2' }}" placeholder="e.g. bi-bank2 or bi-phone-fill">
+                    </div>
+
+                    <div class="col-md-4">
+                      <label class="form-label">Row 1 label</label>
+                      <input type="text" name="donation_row1_label[]" class="form-control" value="{{ m.rows.0.label }}">
+                    </div>
+                    <div class="col-md-8">
+                      <label class="form-label">Row 1 value</label>
+                      <input type="text" name="donation_row1_value[]" class="form-control" value="{{ m.rows.0.value }}">
+                    </div>
+
+                    <div class="col-md-4">
+                      <label class="form-label">Row 2 label</label>
+                      <input type="text" name="donation_row2_label[]" class="form-control" value="{{ m.rows.1.label }}">
+                    </div>
+                    <div class="col-md-8">
+                      <label class="form-label">Row 2 value</label>
+                      <input type="text" name="donation_row2_value[]" class="form-control" value="{{ m.rows.1.value }}">
+                    </div>
+
+                    <div class="col-md-4">
+                      <label class="form-label">Row 3 label</label>
+                      <input type="text" name="donation_row3_label[]" class="form-control" value="{{ m.rows.2.label }}">
+                    </div>
+                    <div class="col-md-8">
+                      <label class="form-label">Row 3 value</label>
+                      <input type="text" name="donation_row3_value[]" class="form-control" value="{{ m.rows.2.value }}">
+                    </div>
+
+                    <div class="col-12 d-flex justify-content-end">
+                      <button type="button" class="btn btn-sm btn-outline-danger remove-donation-method-btn">
+                        <i class="bi bi-trash me-1"></i> Remove method
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% empty %}
+              <div class="text-muted small">No payment methods yet. Click “Add method”.</div>
+              {% endfor %}
+            </div>
+
+            <div class="col-12">
+              <div class="form-text">
+                Tip: if you want to keep it simple, the fields below still work, but the modal will prioritize the dynamic list above.
+              </div>
+            </div>
+
+            <div class="col-md-4"><label class="form-label">Mobile Money merchant code</label>{{ site_settings_form.momo_merchant_code }}</div>
+            <div class="col-md-4"><label class="form-label">Bank name</label>{{ site_settings_form.bank_name }}</div>
+            <div class="col-md-4"><label class="form-label">Bank account name</label>{{ site_settings_form.bank_account_name }}</div>
+            <div class="col-md-6"><label class="form-label">Bank account number</label>{{ site_settings_form.bank_account_number }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#settingsHero">
+          <i class="bi bi-house-door me-2"></i> Homepage hero &amp; stats
+        </button>
+      </h2>
+      <div id="settingsHero" class="accordion-collapse collapse" data-bs-parent="#settingsAccordion">
+        <div class="accordion-body">
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label">Hero badge</label>{{ site_settings_form.home_hero_badge }}</div>
+            <div class="col-md-2"><label class="form-label">Learn</label>{{ site_settings_form.home_hero_title_learn }}</div>
+            <div class="col-md-2"><label class="form-label">Grow</label>{{ site_settings_form.home_hero_title_grow }}</div>
+            <div class="col-md-2"><label class="form-label">Rest</label>{{ site_settings_form.home_hero_title_rest }}</div>
+            <div class="col-12"><label class="form-label">Subtitle</label>{{ site_settings_form.home_hero_subtitle }}</div>
+            <div class="col-md-6"><label class="form-label">Primary button text</label>{{ site_settings_form.home_cta_primary_text }}</div>
+            <div class="col-md-6"><label class="form-label">Primary button URL</label>{{ site_settings_form.home_cta_primary_url }}</div>
+            <div class="col-md-6"><label class="form-label">Secondary button text</label>{{ site_settings_form.home_cta_secondary_text }}</div>
+            <div class="col-md-6"><label class="form-label">Secondary button URL</label>{{ site_settings_form.home_cta_secondary_url }}</div>
+            <div class="col-12"><hr class="my-1 opacity-25"><span class="small text-muted text-uppercase fw-semibold">Stats row</span></div>
+            <div class="col-md-2"><label class="form-label">Stat 1 #</label>{{ site_settings_form.home_stat_1_num }}</div>
+            <div class="col-md-4"><label class="form-label">Stat 1 label</label>{{ site_settings_form.home_stat_1_label }}</div>
+            <div class="col-md-2"><label class="form-label">Stat 2 #</label>{{ site_settings_form.home_stat_2_num }}</div>
+            <div class="col-md-4"><label class="form-label">Stat 2 label</label>{{ site_settings_form.home_stat_2_label }}</div>
+            <div class="col-md-2"><label class="form-label">Stat 3 #</label>{{ site_settings_form.home_stat_3_num }}</div>
+            <div class="col-md-4"><label class="form-label">Stat 3 label</label>{{ site_settings_form.home_stat_3_label }}</div>
+            <div class="col-12"><hr class="my-1 opacity-25"><span class="small text-muted text-uppercase fw-semibold">Side card</span></div>
+            <div class="col-md-6"><label class="form-label">Card title</label>{{ site_settings_form.home_card_title }}</div>
+            <div class="col-md-6"><label class="form-label">Card subtitle</label>{{ site_settings_form.home_card_subtitle }}</div>
+            <div class="col-md-6"><label class="form-label">Item 1</label>{{ site_settings_form.home_card_item_1 }}</div>
+            <div class="col-md-6"><label class="form-label">Item 2</label>{{ site_settings_form.home_card_item_2 }}</div>
+            <div class="col-md-6"><label class="form-label">Item 3</label>{{ site_settings_form.home_card_item_3 }}</div>
+            <div class="col-md-6"><label class="form-label">Item 4</label>{{ site_settings_form.home_card_item_4 }}</div>
+            <div class="col-md-6"><label class="form-label">Card button</label>{{ site_settings_form.home_card_button_text }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#settingsCategories">
+          <i class="bi bi-tags me-2"></i> Resource categories
+        </button>
+      </h2>
+      <div id="settingsCategories" class="accordion-collapse collapse" data-bs-parent="#settingsAccordion">
+        <div class="accordion-body">
+          <p class="text-muted small mb-3">These categories appear in the dashboard “Add” forms and public pages.</p>
+
+          <div class="row g-3">
+            <div class="col-lg-6">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <strong>Video categories</strong>
+                <button type="button" class="btn btn-sm btn-outline-success" data-add-cat="video"><i class="bi bi-plus-lg me-1"></i>Add</button>
+              </div>
+              <div id="videoCats">
+                {% for c in video_categories %}
+                <div class="input-group mb-2 cat-row">
+                  <input type="text" name="video_category[]" class="form-control" value="{{ c }}">
+                  <button type="button" class="btn btn-outline-danger remove-cat-btn"><i class="bi bi-x-lg"></i></button>
+                </div>
+                {% empty %}
+                <div class="text-muted small">No categories yet.</div>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <strong>PDF categories</strong>
+                <button type="button" class="btn btn-sm btn-outline-success" data-add-cat="pdf"><i class="bi bi-plus-lg me-1"></i>Add</button>
+              </div>
+              <div id="pdfCats">
+                {% for c in pdf_categories %}
+                <div class="input-group mb-2 cat-row">
+                  <input type="text" name="pdf_category[]" class="form-control" value="{{ c }}">
+                  <button type="button" class="btn btn-outline-danger remove-cat-btn"><i class="bi bi-x-lg"></i></button>
+                </div>
+                {% empty %}
+                <div class="text-muted small">No categories yet.</div>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <strong>Slides categories</strong>
+                <button type="button" class="btn btn-sm btn-outline-success" data-add-cat="slide"><i class="bi bi-plus-lg me-1"></i>Add</button>
+              </div>
+              <div id="slideCats">
+                {% for c in slide_categories %}
+                <div class="input-group mb-2 cat-row">
+                  <input type="text" name="slide_category[]" class="form-control" value="{{ c }}">
+                  <button type="button" class="btn btn-outline-danger remove-cat-btn"><i class="bi bi-x-lg"></i></button>
+                </div>
+                {% empty %}
+                <div class="text-muted small">No categories yet.</div>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <strong>Gallery categories</strong>
+                <button type="button" class="btn btn-sm btn-outline-success" data-add-cat="gallery"><i class="bi bi-plus-lg me-1"></i>Add</button>
+              </div>
+              <div id="galleryCats">
+                {% for c in gallery_categories %}
+                <div class="input-group mb-2 cat-row">
+                  <input type="text" name="gallery_category[]" class="form-control" value="{{ c }}">
+                  <button type="button" class="btn btn-outline-danger remove-cat-btn"><i class="bi bi-x-lg"></i></button>
+                </div>
+                {% empty %}
+                <div class="text-muted small">No categories yet.</div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#settingsPillars">
+          <i class="bi bi-grid-3x3-gap me-2"></i> Homepage pillars
+        </button>
+      </h2>
+      <div id="settingsPillars" class="accordion-collapse collapse" data-bs-parent="#settingsAccordion">
+        <div class="accordion-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Section label</label>
+              {{ site_settings_form.home_pillars_label }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Section title</label>
+              {{ site_settings_form.home_pillars_title }}
+            </div>
+
+            <div class="col-12">
+              <hr class="my-1 opacity-25">
+              <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                <span class="small text-muted text-uppercase fw-semibold">Pillars list</span>
+                <button type="button" class="btn btn-sm btn-outline-success" id="addPillarBtn">
+                  <i class="bi bi-plus-lg me-1"></i> Add pillar
+                </button>
+              </div>
+            </div>
+
+            <div class="col-12" id="pillarsList">
+              {% for p in home_pillars %}
+              <div class="card border-0 shadow-sm mb-2 pillar-row">
+                <div class="card-body">
+                  <div class="row g-2 align-items-end">
+                    <div class="col-md-4">
+                      <label class="form-label">Name</label>
+                      <input type="text" name="pillar_name[]" class="form-control" value="{{ p.name }}">
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Description</label>
+                      <input type="text" name="pillar_desc[]" class="form-control" value="{{ p.description }}">
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label">Accent</label>
+                      <input type="color" name="pillar_accent[]" class="form-control form-control-color w-100" value="{{ p.accent|default:'#245A42' }}" title="Pick color">
+                    </div>
+                    <div class="col-12 d-flex justify-content-end">
+                      <button type="button" class="btn btn-sm btn-outline-danger remove-pillar-btn">
+                        <i class="bi bi-trash me-1"></i> Remove
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% empty %}
+              <div class="text-muted small">No pillars yet. Click “Add pillar”.</div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#settingsAbout">
+          <i class="bi bi-info-circle me-2"></i> About page
+        </button>
+      </h2>
+      <div id="settingsAbout" class="accordion-collapse collapse" data-bs-parent="#settingsAccordion">
+        <div class="accordion-body">
+          <div class="row g-3">
+            <div class="col-md-4"><label class="form-label">Hero badge</label>{{ site_settings_form.about_hero_badge }}</div>
+            <div class="col-md-4"><label class="form-label">Title</label>{{ site_settings_form.about_hero_title }}</div>
+            <div class="col-md-4"><label class="form-label">Highlight</label>{{ site_settings_form.about_hero_title_highlight }}</div>
+            <div class="col-12"><label class="form-label">Subtitle</label>{{ site_settings_form.about_hero_subtitle }}</div>
+            <div class="col-md-6"><label class="form-label">Vision title</label>{{ site_settings_form.about_vision_title }}</div>
+            <div class="col-md-6"><label class="form-label">Mission title</label>{{ site_settings_form.about_mission_title }}</div>
+            <div class="col-md-6"><label class="form-label">Vision text</label>{{ site_settings_form.about_vision_text }}</div>
+            <div class="col-md-6"><label class="form-label">Mission text</label>{{ site_settings_form.about_mission_text }}</div>
+            <div class="col-12"><hr class="my-1 opacity-25"><span class="small text-muted text-uppercase fw-semibold">History</span></div>
+            <div class="col-md-4"><label class="form-label">History badge</label>{{ site_settings_form.about_history_badge }}</div>
+            <div class="col-md-8"><label class="form-label">History title</label>{{ site_settings_form.about_history_title }}</div>
+            <div class="col-12"><label class="form-label">Paragraph 1</label>{{ site_settings_form.about_history_paragraph_1 }}</div>
+            <div class="col-12"><label class="form-label">Paragraph 2</label>{{ site_settings_form.about_history_paragraph_2 }}</div>
+            <div class="col-md-6"><label class="form-label">History image upload</label>{{ site_settings_form.about_history_image }}</div>
+            <div class="col-md-6"><label class="form-label">History image URL</label>{{ site_settings_form.about_history_image_url }}</div>
+            <div class="col-md-6"><label class="form-label">History card title</label>{{ site_settings_form.about_history_card_title }}</div>
+            <div class="col-md-6"><label class="form-label">History card text</label>{{ site_settings_form.about_history_card_text }}</div>
+            <div class="col-12"><hr class="my-1 opacity-25"><span class="small text-muted text-uppercase fw-semibold">Call to action</span></div>
+            <div class="col-md-4"><label class="form-label">CTA title</label>{{ site_settings_form.about_cta_title }}</div>
+            <div class="col-md-8"><label class="form-label">CTA button</label>{{ site_settings_form.about_cta_button_text }}</div>
+            <div class="col-12"><label class="form-label">CTA text</label>{{ site_settings_form.about_cta_text }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dash-save-bar dash-save-bar-sticky">
+    <button type="submit" class="dash-btn-primary border-0"><i class="bi bi-check2"></i> Save all settings</button>
+    <a href="{% url 'home' %}" class="dash-btn-ghost">Homepage</a>
+    <a href="{% url 'about' %}" class="dash-btn-ghost">About</a>
+  </div>
+</form>
+
+<template id="pillarRowTemplate">
+  <div class="card border-0 shadow-sm mb-2 pillar-row">
+    <div class="card-body">
+      <div class="row g-2 align-items-end">
+        <div class="col-md-4">
+          <label class="form-label">Name</label>
+          <input type="text" name="pillar_name[]" class="form-control" value="">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Description</label>
+          <input type="text" name="pillar_desc[]" class="form-control" value="">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Accent</label>
+          <input type="color" name="pillar_accent[]" class="form-control form-control-color w-100" value="#245A42" title="Pick color">
+        </div>
+        <div class="col-12 d-flex justify-content-end">
+          <button type="button" class="btn btn-sm btn-outline-danger remove-pillar-btn">
+            <i class="bi bi-trash me-1"></i> Remove
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template id="donationMethodRowTemplate">
+  <div class="card border-0 shadow-sm mb-2 donation-method-row">
+    <div class="card-body">
+      <div class="row g-2 align-items-end">
+        <div class="col-md-6">
+          <label class="form-label">Method title</label>
+          <input type="text" name="donation_title[]" class="form-control" value="">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Icon class</label>
+          <input type="text" name="donation_icon[]" class="form-control" value="bi-bank2" placeholder="e.g. bi-bank2 or bi-phone-fill">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Row 1 label</label>
+          <input type="text" name="donation_row1_label[]" class="form-control" value="">
+        </div>
+        <div class="col-md-8">
+          <label class="form-label">Row 1 value</label>
+          <input type="text" name="donation_row1_value[]" class="form-control" value="">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Row 2 label</label>
+          <input type="text" name="donation_row2_label[]" class="form-control" value="">
+        </div>
+        <div class="col-md-8">
+          <label class="form-label">Row 2 value</label>
+          <input type="text" name="donation_row2_value[]" class="form-control" value="">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Row 3 label</label>
+          <input type="text" name="donation_row3_label[]" class="form-control" value="">
+        </div>
+        <div class="col-md-8">
+          <label class="form-label">Row 3 value</label>
+          <input type="text" name="donation_row3_value[]" class="form-control" value="">
+        </div>
+
+        <div class="col-12 d-flex justify-content-end">
+          <button type="button" class="btn btn-sm btn-outline-danger remove-donation-method-btn">
+            <i class="bi bi-trash me-1"></i> Remove method
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template id="categoryRowTemplate">
+  <div class="input-group mb-2 cat-row">
+    <input type="text" class="form-control" value="">
+    <button type="button" class="btn btn-outline-danger remove-cat-btn"><i class="bi bi-x-lg"></i></button>
+  </div>
+</template>
+
+<script>
+  (function () {
+    const list = document.getElementById('pillarsList');
+    const addBtn = document.getElementById('addPillarBtn');
+    const tpl = document.getElementById('pillarRowTemplate');
+    if (!list || !addBtn || !tpl) return;
+
+    function bindRemove(btn) {
+      btn.addEventListener('click', function () {
+        const row = btn.closest('.pillar-row');
+        row?.remove();
+      });
+    }
+
+    list.querySelectorAll('.remove-pillar-btn').forEach(bindRemove);
+
+    addBtn.addEventListener('click', function () {
+      const fragment = tpl.content.cloneNode(true);
+      const row = fragment.querySelector('.pillar-row');
+      const removeBtn = fragment.querySelector('.remove-pillar-btn');
+      if (removeBtn) bindRemove(removeBtn);
+      list.appendChild(fragment);
+      row?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  })();
+</script>
+
+<script>
+  (function () {
+    const list = document.getElementById('donationMethodsList');
+    const addBtn = document.getElementById('addDonationMethodBtn');
+    const tpl = document.getElementById('donationMethodRowTemplate');
+    if (!list || !addBtn || !tpl) return;
+
+    function bindRemove(btn) {
+      btn.addEventListener('click', function () {
+        const row = btn.closest('.donation-method-row');
+        row?.remove();
+      });
+    }
+
+    list.querySelectorAll('.remove-donation-method-btn').forEach(bindRemove);
+
+    addBtn.addEventListener('click', function () {
+      const fragment = tpl.content.cloneNode(true);
+      const removeBtn = fragment.querySelector('.remove-donation-method-btn');
+      if (removeBtn) bindRemove(removeBtn);
+      list.appendChild(fragment);
+    });
+  })();
+</script>
+
+<script>
+  (function () {
+    const tpl = document.getElementById('categoryRowTemplate');
+    if (!tpl) return;
+
+    function bindRemove(btn) {
+      btn.addEventListener('click', function () {
+        btn.closest('.cat-row')?.remove();
+      });
+    }
+
+    document.querySelectorAll('.remove-cat-btn').forEach(bindRemove);
+
+    document.querySelectorAll('[data-add-cat]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const kind = btn.getAttribute('data-add-cat');
+        const map = {
+          video: { container: 'videoCats', name: 'video_category[]' },
+          pdf: { container: 'pdfCats', name: 'pdf_category[]' },
+          slide: { container: 'slideCats', name: 'slide_category[]' },
+          gallery: { container: 'galleryCats', name: 'gallery_category[]' },
+        };
+        const cfg = map[kind];
+        if (!cfg) return;
+        const container = document.getElementById(cfg.container);
+        if (!container) return;
+        const fragment = tpl.content.cloneNode(true);
+        const input = fragment.querySelector('input');
+        const removeBtn = fragment.querySelector('.remove-cat-btn');
+        if (input) input.setAttribute('name', cfg.name);
+        if (removeBtn) bindRemove(removeBtn);
+        container.appendChild(fragment);
+      });
+    });
+  })();
+</script>

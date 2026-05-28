@@ -1,0 +1,248 @@
+{% with section=manage_section|default:"videos" %}
+<nav class="dash-subnav mb-4" aria-label="Resource type">
+  <a href="?tab=resources&section=videos" class="dash-subnav-link {% if section == 'videos' %}active{% endif %}">
+    <i class="bi bi-play-btn"></i> Videos <span class="dash-subnav-count">{{ resource_stats.videos }}</span>
+  </a>
+  <a href="?tab=resources&section=pdfs" class="dash-subnav-link {% if section == 'pdfs' %}active{% endif %}">
+    <i class="bi bi-file-pdf"></i> PDFs <span class="dash-subnav-count">{{ resource_stats.pdfs }}</span>
+  </a>
+  <a href="?tab=resources&section=slides" class="dash-subnav-link {% if section == 'slides' %}active{% endif %}">
+    <i class="bi bi-easel"></i> Slides <span class="dash-subnav-count">{{ resource_stats.slides }}</span>
+  </a>
+</nav>
+
+<details class="dash-details mb-4">
+  <summary class="dash-details-summary">
+    <i class="bi bi-plus-lg"></i>
+    {% if section == 'videos' %}Add new video{% elif section == 'pdfs' %}Add new PDF{% else %}Add new slides{% endif %}
+  </summary>
+  <div class="dash-details-body">
+    {% if section == 'videos' %}
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="hidden" name="tab" value="resources">
+      <input type="hidden" name="action" value="add_video">
+      <div class="row g-3">
+        <div class="col-md-6"><label class="form-label">Title</label>{{ video_form.title }}</div>
+        <div class="col-md-6"><label class="form-label">YouTube URL</label>{{ video_form.youtube_url }}</div>
+        <div class="col-md-4"><label class="form-label">Category</label>{{ video_form.category }}</div>
+        <div class="col-md-4"><label class="form-label">Duration</label>{{ video_form.duration }}</div>
+        <div class="col-md-4"><label class="form-label">Instructor</label>{{ video_form.instructor }}</div>
+        <div class="col-md-6"><label class="form-label">Thumbnail</label>{{ video_form.thumbnail }}</div>
+        <div class="col-12"><label class="form-label">Description</label>{{ video_form.description }}</div>
+        <div class="col-md-6">
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" name="feature_on_homepage" id="video_feature_home">
+            <label class="form-check-label" for="video_feature_home">Feature on homepage</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="video_homepage_order">Homepage order</label>
+          <input type="number" class="form-control" name="homepage_order" id="video_homepage_order" value="0" min="0">
+        </div>
+      </div>
+      <button type="submit" class="dash-btn-primary border-0 mt-3"><i class="bi bi-check2"></i> Save video</button>
+    </form>
+    {% elif section == 'pdfs' %}
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="hidden" name="tab" value="resources">
+      <input type="hidden" name="action" value="add_pdf">
+      <div class="row g-3">
+        <div class="col-md-6"><label class="form-label">Title</label>{{ pdf_form.title }}</div>
+        <div class="col-md-6"><label class="form-label">Category</label>{{ pdf_form.category }}</div>
+        <div class="col-md-4"><label class="form-label">Author</label>{{ pdf_form.author }}</div>
+        <div class="col-md-4"><label class="form-label">Pages</label>{{ pdf_form.pages }}</div>
+        <div class="col-md-6"><label class="form-label">PDF file</label>{{ pdf_form.pdf_file }}</div>
+        <div class="col-md-6"><label class="form-label">Cover image</label>{{ pdf_form.thumbnail }}</div>
+        <div class="col-12"><label class="form-label">Description</label>{{ pdf_form.description }}</div>
+      </div>
+      <button type="submit" class="dash-btn-primary border-0 mt-3"><i class="bi bi-check2"></i> Save PDF</button>
+    </form>
+    {% else %}
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="hidden" name="tab" value="resources">
+      <input type="hidden" name="action" value="add_slide">
+      <div class="row g-3">
+        <div class="col-md-6"><label class="form-label">Title</label>{{ slide_form.title }}</div>
+        <div class="col-md-6"><label class="form-label">Category</label>{{ slide_form.category }}</div>
+        <div class="col-md-4"><label class="form-label">Presenter</label>{{ slide_form.presenter }}</div>
+        <div class="col-md-4"><label class="form-label">Slide count</label>{{ slide_form.slides_count }}</div>
+        <div class="col-md-6"><label class="form-label">Presentation file</label>{{ slide_form.slide_file }}</div>
+        <div class="col-md-6"><label class="form-label">Cover image</label>{{ slide_form.thumbnail }}</div>
+        <div class="col-12"><label class="form-label">Description</label>{{ slide_form.description }}</div>
+      </div>
+      <button type="submit" class="dash-btn-primary border-0 mt-3"><i class="bi bi-check2"></i> Save slides</button>
+    </form>
+    {% endif %}
+  </div>
+</details>
+
+<div id="manage-resources" class="dash-card dash-panel">
+  <div class="dash-panel-toolbar">
+    <h6 class="dash-panel-title mb-0">
+      {% if section == 'videos' %}All videos{% elif section == 'pdfs' %}All PDF guides{% else %}All slides{% endif %}
+    </h6>
+    <a href="{% if section == 'videos' %}{% url 'video_list' %}{% elif section == 'pdfs' %}{% url 'pdf_list' %}{% else %}{% url 'slides_list' %}{% endif %}"
+       class="dash-btn-ghost btn-sm">
+      <i class="bi bi-box-arrow-up-right"></i> Public page
+    </a>
+  </div>
+
+  {% if section == 'videos' %}
+  <form method="GET" class="dash-search-bar mb-3">
+    <input type="hidden" name="tab" value="resources">
+    <input type="hidden" name="section" value="videos">
+    <input type="search" name="video_q" class="form-control" placeholder="Search videos…" value="{{ video_q }}">
+    <button type="submit" class="dash-btn-primary border-0">Search</button>
+  </form>
+  {% if library_videos %}
+  <div class="table-responsive dash-table-wrap">
+    <table class="table table-hover align-middle mb-0 dash-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Instructor</th>
+          <th>Homepage</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for video in library_videos %}
+        <tr>
+          <td><img src="{{ video.thumbnail_url }}" alt="" class="resource-thumb"></td>
+          <td>
+            <span class="fw-semibold d-block">{{ video.title }}</span>
+            <span class="small text-muted">{{ video.duration }}</span>
+          </td>
+          <td><span class="dash-badge">{{ video.get_category_display }}</span></td>
+          <td class="small text-muted">{{ video.instructor }}</td>
+          <td>
+            {% if video.show_on_homepage %}
+              <span class="dash-badge dash-badge-ok">On ({{ video.homepage_order }})</span>
+            {% else %}
+              <span class="dash-badge dash-badge-muted">Off</span>
+            {% endif %}
+          </td>
+          <td class="text-end">
+            <div class="dash-icon-actions">
+              <form method="POST" class="d-inline">
+                {% csrf_token %}
+                <input type="hidden" name="tab" value="resources">
+                <input type="hidden" name="action" value="toggle_video_home">
+                <input type="hidden" name="video_id" value="{{ video.pk }}">
+                <button type="submit" class="dash-icon-btn" title="Toggle homepage"><i class="bi bi-house"></i></button>
+              </form>
+              <a href="{{ video.direct_youtube_url }}" class="dash-icon-btn" title="View"><i class="bi bi-eye"></i></a>
+              <a href="{% url 'edit_video' video.pk %}?return=dashboard" class="dash-icon-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+              <a href="{% url 'delete_video' video.pk %}?return=dashboard" class="dash-icon-btn dash-icon-btn-danger" title="Delete"><i class="bi bi-trash"></i></a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="dash-empty">No videos yet. Use <strong>Add new video</strong> above.</p>
+  {% endif %}
+
+  {% elif section == 'pdfs' %}
+  <form method="GET" class="dash-search-bar mb-3">
+    <input type="hidden" name="tab" value="resources">
+    <input type="hidden" name="section" value="pdfs">
+    <input type="search" name="pdf_q" class="form-control" placeholder="Search PDFs…" value="{{ pdf_q }}">
+    <button type="submit" class="dash-btn-primary border-0">Search</button>
+  </form>
+  {% if library_pdfs %}
+  <div class="table-responsive dash-table-wrap">
+    <table class="table table-hover align-middle mb-0 dash-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Author</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pdf in library_pdfs %}
+        <tr>
+          <td>
+            {% if pdf.thumbnail %}<img src="{{ pdf.thumbnail.url }}" alt="" class="resource-thumb">{% else %}<span class="text-muted">—</span>{% endif %}
+          </td>
+          <td>
+            <span class="fw-semibold d-block">{{ pdf.title }}</span>
+            <span class="small text-muted">{{ pdf.pages }} pages · {{ pdf.file_size }}</span>
+          </td>
+          <td><span class="dash-badge">{{ pdf.get_category_display }}</span></td>
+          <td class="small text-muted">{{ pdf.author }}</td>
+          <td class="text-end">
+            <div class="dash-icon-actions">
+              <a href="{{ pdf.pdf_file.url }}" class="dash-icon-btn" title="Open PDF"><i class="bi bi-file-pdf"></i></a>
+              <a href="{% url 'edit_pdf' pdf.pk %}?return=dashboard" class="dash-icon-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+              <a href="{% url 'delete_pdf' pdf.pk %}?return=dashboard" class="dash-icon-btn dash-icon-btn-danger" title="Delete"><i class="bi bi-trash"></i></a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="dash-empty">No PDF guides yet. Use <strong>Add new PDF</strong> above.</p>
+  {% endif %}
+
+  {% else %}
+  <form method="GET" class="dash-search-bar mb-3">
+    <input type="hidden" name="tab" value="resources">
+    <input type="hidden" name="section" value="slides">
+    <input type="search" name="slide_q" class="form-control" placeholder="Search slides…" value="{{ slide_q }}">
+    <button type="submit" class="dash-btn-primary border-0">Search</button>
+  </form>
+  {% if library_slides %}
+  <div class="table-responsive dash-table-wrap">
+    <table class="table table-hover align-middle mb-0 dash-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Presenter</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for slide in library_slides %}
+        <tr>
+          <td>
+            {% if slide.thumbnail %}<img src="{{ slide.thumbnail.url }}" alt="" class="resource-thumb">{% else %}<span class="text-muted">—</span>{% endif %}
+          </td>
+          <td>
+            <span class="fw-semibold d-block">{{ slide.title }}</span>
+            <span class="small text-muted">{{ slide.slides_count }} slides</span>
+          </td>
+          <td><span class="dash-badge">{{ slide.get_category_display }}</span></td>
+          <td class="small text-muted">{{ slide.presenter }}</td>
+          <td class="text-end">
+            <div class="dash-icon-actions">
+              <a href="{{ slide.slide_file.url }}" class="dash-icon-btn" title="Download"><i class="bi bi-download"></i></a>
+              <a href="{% url 'edit_slide' slide.pk %}?return=dashboard" class="dash-icon-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+              <a href="{% url 'delete_slide' slide.pk %}?return=dashboard" class="dash-icon-btn dash-icon-btn-danger" title="Delete"><i class="bi bi-trash"></i></a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="dash-empty">No slides yet. Use <strong>Add new slides</strong> above.</p>
+  {% endif %}
+  {% endif %}
+</div>
+{% endwith %}

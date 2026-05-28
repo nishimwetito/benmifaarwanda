@@ -39,49 +39,16 @@
             <div class="col-md-6 text-md-end mt-3 mt-md-0">
                 <div class="d-flex flex-wrap justify-content-md-end gap-2 align-items-center">
                     {% if user.is_staff %}
-                    <button class="btn btn-gold shadow-sm d-flex align-items-center gap-2 me-3" data-bs-toggle="modal" data-bs-target="#uploadPdfModal">
-                        <i class="bi bi-file-earmark-plus"></i> Add PDF Guide
-                    </button>
+                    <a href="{% url 'dashboard' %}?tab=resources&section=pdfs" class="btn btn-gold shadow-sm d-inline-flex align-items-center gap-2">
+                        <i class="bi bi-gear"></i> Manage
+                    </a>
                     {% endif %}
-                    <a href="{% url 'courses' %}" class="btn-outline-green">All Resources</a>
                     <a href="{% url 'video_list' %}" class="btn-outline-green">Videos</a>
-                    <a href="{% url 'pdf_list' %}" class="btn-green shadow-sm">PDF Guides</a>
+                    <a href="{% url 'pdf_list' %}" class="btn-green is-active">PDF Guides</a>
                     <a href="{% url 'slides_list' %}" class="btn-outline-green">Slides</a>
                 </div>
             </div>
         </div>
-
-        {% if user.is_staff %}
-        <!-- Upload PDF Modal -->
-        <div class="modal fade" id="uploadPdfModal" tabindex="-1" aria-labelledby="uploadPdfModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content" style="border-radius: 20px; overflow: hidden;">
-                    <div class="modal-header" style="background: var(--green-dark); color: white;">
-                        <h5 class="modal-title" id="uploadPdfModalLabel">Add New PDF Guide</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form method="POST" enctype="multipart/form-data">
-                        <div class="modal-body p-4">
-                            {% csrf_token %}
-                            <div class="row">
-                                <div class="col-md-8 mb-3">{{ pdf_form.title.label_tag }}{{ pdf_form.title }}</div>
-                                <div class="col-md-4 mb-3">{{ pdf_form.category.label_tag }}{{ pdf_form.category }}</div>
-                                <div class="col-md-6 mb-3">{{ pdf_form.author.label_tag }}{{ pdf_form.author }}</div>
-                                <div class="col-md-6 mb-3">{{ pdf_form.pages.label_tag }}{{ pdf_form.pages }}</div>
-                                <div class="col-md-12 mb-3">{{ pdf_form.description.label_tag }}{{ pdf_form.description }}</div>
-                                <div class="col-md-6 mb-3">{{ pdf_form.thumbnail.label_tag }}{{ pdf_form.thumbnail }}</div>
-                                <div class="col-md-6 mb-3">{{ pdf_form.pdf_file.label_tag }}{{ pdf_form.pdf_file }}</div>
-                            </div>
-                        </div>
-                        <div class="modal-footer bg-light border-0">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-green px-4">Save Guide</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        {% endif %}
 
         <div class="row g-4">
             {% for pdf in pdfs %}
@@ -99,7 +66,7 @@
                     </div>
                     {% endif %}
                     
-                    <div class="pdf-thumb" style="height: 220px; background: #f8f9fa; position: relative; overflow: hidden;">
+                    <div class="pdf-thumb" style="height: 220px; background: var(--surface-2); position: relative; overflow: hidden;">
                         <img src="{{ pdf.thumbnail.url }}" alt="{{ pdf.title }}" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.8;">
                         <div class="pdf-icon-overlay">
                             <i class="bi bi-file-earmark-pdf-fill"></i>

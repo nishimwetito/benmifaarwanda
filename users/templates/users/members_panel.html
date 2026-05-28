@@ -1,0 +1,133 @@
+<details class="dash-details mb-4" {% if member_form.errors %}open{% endif %}>
+  <summary class="dash-details-summary">
+    <i class="bi bi-person-plus"></i> Register new member
+  </summary>
+  <div class="dash-details-body">
+    <p class="dash-panel-desc">Only administrators can create accounts. The member signs in with the username and password you set.</p>
+    <form method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="tab" value="members">
+      <input type="hidden" name="action" value="add_member">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Username</label>
+          {{ member_form.username }}
+          {% if member_form.username.errors %}<div class="text-danger small">{{ member_form.username.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Email</label>
+          {{ member_form.email }}
+          {% if member_form.email.errors %}<div class="text-danger small">{{ member_form.email.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Phone</label>
+          {{ member_form.phone_number }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">First name</label>
+          {{ member_form.first_name }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Last name</label>
+          {{ member_form.last_name }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Password</label>
+          {{ member_form.password1 }}
+          {% if member_form.password1.errors %}<div class="text-danger small">{{ member_form.password1.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Confirm password</label>
+          {{ member_form.password2 }}
+          {% if member_form.password2.errors %}<div class="text-danger small">{{ member_form.password2.errors.0 }}</div>{% endif %}
+        </div>
+        {% if member_form.non_field_errors %}
+        <div class="col-12"><div class="text-danger small">{{ member_form.non_field_errors.0 }}</div></div>
+        {% endif %}
+      </div>
+      <button type="submit" class="dash-btn-primary border-0 mt-3"><i class="bi bi-person-plus"></i> Create member account</button>
+    </form>
+  </div>
+</details>
+
+<form method="GET" class="dash-search-bar">
+  <input type="hidden" name="tab" value="members">
+  <input type="search" name="member_search" class="form-control flex-grow-1" placeholder="Search by name or username…" value="{{ member_search }}">
+  <button type="submit" class="dash-btn-primary border-0">Search</button>
+</form>
+
+<div class="dash-member-grid">
+  {% for member in all_profiles %}
+  <div class="dash-member-card">
+    {% if member.profile_picture and member.profile_picture.name != 'default.jpg' %}
+      <img src="{{ member.profile_picture.url }}" alt="">
+    {% else %}
+      <div class="dash-member-ph"><i class="bi bi-person"></i></div>
+    {% endif %}
+    <div class="flex-grow-1 overflow-hidden">
+      <div class="fw-semibold text-truncate">{{ member.user.get_full_name|default:member.user.username }}</div>
+      <div class="small text-muted text-truncate">@{{ member.user.username }}</div>
+      {% if member.user.is_staff %}<span class="badge bg-secondary mt-1">Staff</span>{% endif %}
+      <div class="d-flex flex-wrap align-items-center gap-2 mt-1">
+        <a href="{% url 'profile_detail' member.user.username %}" class="small text-decoration-none" style="color:var(--green-main);">View profile →</a>
+        {% if not member.user.is_staff and member.user.id != user.id %}
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-danger py-0"
+          data-bs-toggle="modal"
+          data-bs-target="#deleteMemberModal"
+          data-user-id="{{ member.user.id }}"
+          data-user-name="{{ member.user.get_full_name|default:member.user.username }}"
+        >
+          Delete
+        </button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="dash-card col-12"><p class="text-muted mb-0">No members found.</p></div>
+  {% endfor %}
+</div>
+
+<!-- Delete member confirmation -->
+<div class="modal fade" id="deleteMemberModal" tabindex="-1" aria-labelledby="deleteMemberModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteMemberModalLabel">Delete member</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-0">Are you sure you want to delete <strong id="deleteMemberName">this member</strong>? This cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+        <form method="POST" class="m-0">
+          {% csrf_token %}
+          <input type="hidden" name="tab" value="members">
+          <input type="hidden" name="action" value="delete_member">
+          <input type="hidden" name="user_id" id="deleteMemberUserId" value="">
+          <button type="submit" class="btn btn-danger">Delete member</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const modalEl = document.getElementById('deleteMemberModal');
+    if (!modalEl) return;
+    modalEl.addEventListener('show.bs.modal', function (event) {
+      const trigger = event.relatedTarget;
+      if (!trigger) return;
+      const userId = trigger.getAttribute('data-user-id') || '';
+      const userName = trigger.getAttribute('data-user-name') || 'this member';
+      const idInput = document.getElementById('deleteMemberUserId');
+      const nameEl = document.getElementById('deleteMemberName');
+      if (idInput) idInput.value = userId;
+      if (nameEl) nameEl.textContent = userName;
+    });
+  })();
+</script>
